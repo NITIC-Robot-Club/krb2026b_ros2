@@ -1,0 +1,32 @@
+<launch>
+    <node_container pkg="rclcpp_components" exec="component_container" name="visualization_container" namespace="visualization">
+        <!-- マップ表示 -->
+        <composable_node pkg="natto_visualization_converter" plugin="map_visualizer::map_visualizer" name="map" namespace="visualization">
+            <param name="publish_period_ms" value="10"/>
+            <remap from="map" to="/map"/>
+            <remap from="marker_array" to="/visualization/map"/>
+        </composable_node>
+
+        <!-- 独ステ表示 -->
+        <composable_node pkg="natto_visualization_converter" plugin="swerve_visualizer::swerve_visualizer" name="command" namespace="visualization/swerve">
+            <param name="arrow_r" value="0.0"/>
+            <param name="arrow_g" value="0.0"/>
+            <param name="arrow_b" value="1.0"/>
+            <param name="publish_period_ms" value="10"/>
+            <param from="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
+            <remap from="swerve" to="/swerve/command"/>
+            <remap from="marker_array" to="/visualization/swerve/command"/>
+        </composable_node>
+        <composable_node pkg="natto_visualization_converter" plugin="swerve_visualizer::swerve_visualizer" name="result" namespace="visualization/swerve">
+            <param name="publish_period_ms" value="10"/>
+            <param name="arrow_r" value="1.0"/>
+            <param name="arrow_g" value="0.0"/>
+            <param name="arrow_b" value="0.0"/>
+            <param from="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
+            <remap from="swerve" to="/swerve/result"/>
+            <remap from="marker_array" to="/visualization/swerve/result"/>
+        </composable_node>
+    </node_container>
+    <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen"
+        args="-d $(find-pkg-share krb2026b_launch)/rviz/dark_rviz.rviz --stylesheet $(find-pkg-share krb2026b_launch)/rviz/dark.qss"/>
+</launch>
