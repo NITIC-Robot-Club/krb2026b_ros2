@@ -6,7 +6,7 @@
             <remap from="swerve_command" to="/swerve/command"/>
             <remap from="swerve_result" to="/swerve/result"/>
             <!-- <remap from="command_velocity" to="/control/command_velocity"/> -->
-            <remap from="command_velocity" to="/controller/cmd_vel"/>
+            <remap from="command_velocity" to="/control/cmd_vel"/>
         </composable_node>
     </node_container>
 </launch>
