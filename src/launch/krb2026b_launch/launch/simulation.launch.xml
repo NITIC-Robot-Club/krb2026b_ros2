@@ -5,8 +5,8 @@
         <!-- 独ステシミュレーター -->
         <composable_node pkg="natto_simple_simulation" plugin="swerve_simulator::swerve_simulator" name="simulator" namespace="swerve">
             <param from="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
-            <param name="position_x" value="0.5"/>
-            <param name="position_y" value="0.5"/>
+            <param name="initial_pose_x" value="0.5"/>
+            <param name="initial_pose_y" value="0.5"/>
             <param name="angle_gain_p" value="300.0"/>
             <param name="angle_gain_d" value="100.0"/>
             <param name="speed_gain_p" value="300.0"/>
