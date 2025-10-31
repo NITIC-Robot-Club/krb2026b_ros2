@@ -11,7 +11,7 @@
 
         <!-- Planning -->
         <composable_node pkg="natto_astar_planner" plugin="astar_planner::astar_planner" name="astar_planner" namespace="/planning">
-            <remap from="map" to="/occupancy_grid"/>
+            <remap from="occupancy_grid" to="/occupancy_grid"/>
             <remap from="current_pose" to="/simulation/pose"/>
             <remap from="goal_pose" to="/goal_pose"/>
             <remap from="path" to="/planning/path"/>
