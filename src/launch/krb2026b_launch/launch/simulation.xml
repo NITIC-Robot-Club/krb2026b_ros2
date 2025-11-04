@@ -96,6 +96,17 @@
         </composable_node>
     </node_container>
 
+    <!-- 自己位置推定 -->
+    <node_container pkg="rclcpp_components" exec="component_container" name="localization_container" namespace="localization">
+        <!-- 独ステオドメトリ -->
+        <composable_node pkg="natto_wheel_odometry" plugin="swerve_odometry::swerve_odometry" name="swerve_odometry" namespace="localization/swerve_odometry">
+            <param from="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
+            <param name="frame_id" value="odom"/>
+            <param name="child_frame_id" value="base_link"/>
+            <remap from="swerve" to="/swerve/result"/>
+        </composable_node>
+    </node_container>
+
     <!-- コントロールコンテナ -->
     <node_container pkg="rclcpp_components" exec="component_container" name="control_container" namespace="/control">
         <!-- 独ステ目標計算 -->
@@ -186,7 +197,8 @@
     <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_lidar_rear" output="screen"
         args="-0.25 0 0 0 0 1 0 base_link lidar_rear"/>
     
-    <!-- 自己位置 -->
-    <node pkg="tf2_ros" exec="static_transform_publisher" name="simulation_to_base_link" output="screen"
-        args="0 0 0 0 0 0 1 simulation base_link"/>
+    <!-- 自己位置推定 -->
+    <node pkg="tf2_ros" exec="static_transform_publisher" name="map_to_odom" output="screen"
+        args="0.5 0.5 0 0 0 0 1 map odom"/>
+
 </launch>
