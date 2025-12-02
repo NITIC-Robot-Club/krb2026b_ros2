@@ -306,7 +306,7 @@ Visualization Manager:
         - Alpha: 0.699999988079071
           Class: rviz_default_plugins/Map
           Color Scheme: costmap
-          Draw Behind: false
+          Draw Behind: true
           Enabled: true
           Name: CostMap
           Topic:
@@ -655,16 +655,16 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 10.022316932678223
+      Distance: 7.649519920349121
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 3
-        Y: 2.5
-        Z: 0
+        X: 2.242770195007324
+        Y: 1.2785993814468384
+        Z: -0.48703733086586
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
