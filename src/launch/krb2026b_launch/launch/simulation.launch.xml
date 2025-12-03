@@ -102,7 +102,7 @@
             <param from="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
             <param name="frame_id" value="odom"/>
             <param name="child_frame_id" value="base_link"/>
-            <remap from="swerve" to="/swerve/result"/>
+            <remap from="swerve_result" to="/swerve/result"/>
         </composable_node>
     </node_container>
 
