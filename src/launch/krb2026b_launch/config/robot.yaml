@@ -2,7 +2,7 @@
   ros__parameters:
     wheel_radius : 0.0375
     infinite_swerve_mode : true
-    wheel_position_x : [+0.25, -0.25, -0.25, +0.25]
-    wheel_position_y : [+0.25, +0.25, -0.25, -0.25]
-    footprint_points_x : [+0.3, +0.3, -0.3, -0.3]
-    footprint_points_y : [+0.3, -0.3, -0.3, +0.3]
+    wheel_position_x : [+0.173, -0.173, -0.173, +0.173]
+    wheel_position_y : [+0.173, +0.173, -0.173, -0.173]
+    footprint_points_x : [+0.237, +0.237, -0.237, -0.237]
+    footprint_points_y : [+0.237, -0.237, -0.237, +0.237]
