@@ -10,10 +10,13 @@
     motion_noise_xx: 0.2
     motion_noise_xy: 0.1
     motion_noise_yy: 0.2
-    motion_noise_theta: 0.1
-    motion_noise_position : 0.02
-    motion_noise_orientation : 0.02
-    expansion_radius_position: 0.2
-    expansion_radius_orientation: 0.2
+    motion_noise_theta: 0.2
+    motion_noise_position : 0.05
+    motion_noise_orientation : 0.05
+    expansion_radius_position: 1.0
+    expansion_radius_orientation: 1.5
     laser_likelihood_max_dist: 0.05
     transform_tolerance: 0.2
+    alpha_threshold : 0.3
+    extraction_rate: 0.02
+    range_threshold : 0.3
