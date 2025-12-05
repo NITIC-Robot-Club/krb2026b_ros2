@@ -4,7 +4,7 @@
         <!-- マップ読み込み -->
         <composable_node pkg="natto_map" plugin="map_loader::map_loader" name="map_loader">
             <param name="line_segments_path" value="$(find-pkg-share krb2026b_launch)/map/line_segments.csv"/>
-            <param name="circles_path" value="$(find-pkg-share krb2026b_launch)/map/circles.csv"/>
+            <!-- <param name="circles_path" value="$(find-pkg-share krb2026b_launch)/map/circles.csv"/> -->
             <param name="publish_period_ms" value="100"/>
         </composable_node>
 
@@ -76,7 +76,7 @@
             <remap from="footprint" to="/robot/footprint"/>
             <param name="theta_resolution_deg" value="5"/>
             <param name="xy_inflation" value="0.3"/>
-            <param name="xy_offset" value="0.5"/>
+            <param name="xy_offset" value="0.8"/>
         </composable_node>
 
         <!-- 経路追従 -->
