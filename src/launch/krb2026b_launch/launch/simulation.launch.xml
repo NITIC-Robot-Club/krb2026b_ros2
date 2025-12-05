@@ -109,7 +109,7 @@
     <!-- コントロールコンテナ -->
     <node_container pkg="rclcpp_components" exec="component_container" name="control_container" namespace="/control">
         <!-- 独ステ目標計算 -->
-        <composable_node pkg="natto_swerve_calculator" plugin="swerve_calculator::swerve_calculator" name="calculator" namespace="/control/swerve">
+        <composable_node pkg="natto_chassis_calculator" plugin="swerve_calculator::swerve_calculator" name="calculator" namespace="/control/swerve">
             <param from="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
             <remap from="swerve_command" to="/swerve/command"/>
             <remap from="swerve_result" to="/swerve/result"/>
