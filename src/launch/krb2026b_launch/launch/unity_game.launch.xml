@@ -57,6 +57,9 @@
         </composable_node>
     </node_container>
 
+
+    <node pkg="joy" exec="game_controller_node" name="joy" output="screen"/>
+
     <!-- コントロールコンテナ -->
     <node_container pkg="rclcpp_components" exec="component_container" name="control_container" namespace="/control">
         <!-- 独ステ目標計算 -->
@@ -64,7 +67,14 @@
             <param from="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
             <remap from="swerve_command" to="/swerve/command"/>
             <remap from="swerve_result" to="/swerve/result"/>
-            <remap from="command_velocity" to="/control/command_velocity"/>
+            <remap from="command_velocity" to="/controller/command_velocity"/>
+        </composable_node>
+
+        <composable_node pkg="natto_joy" plugin="joy_to_twist::joy_to_twist" name="joy_to_twist">
+            <param name="max_xy_speed_m_s" value="4.0"/>
+            <param name="max_theta_speed_rad_s" value="3.0"/>
+            <remap from="joy" to="/joy"/>
+            <remap from="command_velocity" to="/controller/command_velocity"/>
         </composable_node>
 
         <!-- 経路計算 -->
