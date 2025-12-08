@@ -1,0 +1,55 @@
+<launch>
+    <arg name="use_unity" default="false"/>
+    <arg name="use_joy_control" default="false"/>
+
+    <!-- コモン -->
+    <include file="$(find-pkg-share natto_launch)/launch/common.launch.xml">
+        <arg name="line_segments_path" value="$(find-pkg-share krb2026b_launch)/map/line_segments.csv"/>
+        <arg name="circles_path" value="$(find-pkg-share krb2026b_launch)/map/circles.csv"/>
+        <arg name="occupancy_grid_resolution" value="0.05"/>
+        <arg name="footprint_param_path" value="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
+    </include>
+
+    <!-- シミュレーション -->
+    <group unless="$(var use_unity)">
+        <include file="$(find-pkg-share natto_launch)/launch/simulation.launch.xml">
+            <arg name="chassis_type" value="$(var chassis_type)"/>
+            <arg name="initial_pose_x" value="1.0"/>
+            <arg name="initial_pose_y" value="1.0"/>
+            <arg name="initial_pose_yaw_deg" value="0.0"/>
+            <arg name="chassis_param_path" value="$(var chassis_param_path)"/>
+            <arg name="lidar_param_path" value="$(find-pkg-share krb2026b_launch)/config/lidar_params.yaml"/>
+        </include>
+    </group>
+
+
+    <!-- センシング -->
+    <include file="$(find-pkg-share natto_launch)/launch/sensing.launch.xml">
+        <arg name="use_laserscan_convert" value="$(var use_unity)"/>
+    </include>
+
+    <!-- コントロール -->
+    <include file="$(find-pkg-share natto_launch)/launch/control.launch.xml">
+        <arg name="chassis_type" value="swerve"/>
+        <arg name="chassis_param_path" value="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
+        <arg name="control_param_path" value="$(find-pkg-share krb2026b_launch)/param/control.yaml"/>
+        <arg name="planning_param_path" value="$(find-pkg-share krb2026b_launch)/param/planning.yaml"/>
+        <arg name="use_joy_control" value="$(var use_joy_control)"/>
+    </include>
+
+    <!-- 表示 -->
+    <include file="$(find-pkg-share natto_launch)/launch/visualization.launch.xml">
+        <arg name="chassis_type" value="swerve"/>
+    </include>
+
+    <!-- 自己位置 -->
+    <include file="$(find-pkg-share natto_launch)/launch/localization.launch.xml">
+        <arg name="localization_param_path" value="$(find-pkg-share krb2026b_launch)/config/localization.yaml"/>
+    </include>
+
+    <!-- TF -->
+    <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_lidar_front" output="screen"
+        args="+0.25 0 0 0 0 0 1 base_link lidar_front"/>
+    <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_lidar_rear" output="screen"
+        args="-0.25 0 0 0 0 1 0 base_link lidar_rear"/>
+</launch>
