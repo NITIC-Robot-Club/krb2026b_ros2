@@ -2,6 +2,9 @@
     <arg name="use_unity" default="false"/>
     <arg name="use_joy_control" default="false"/>
 
+    <let name="laserscan_convert" value="true" unless="$(var use_unity)"/>
+    <let name="laserscan_convert" value="false" if="$(var use_unity)"/>
+
     <!-- コモン -->
     <include file="$(find-pkg-share natto_launch)/launch/common.launch.xml">
         <arg name="line_segments_path" value="$(find-pkg-share krb2026b_launch)/map/line_segments.csv"/>
@@ -13,11 +16,11 @@
     <!-- シミュレーション -->
     <group unless="$(var use_unity)">
         <include file="$(find-pkg-share natto_launch)/launch/simulation.launch.xml">
-            <arg name="chassis_type" value="$(var chassis_type)"/>
-            <arg name="initial_pose_x" value="1.0"/>
-            <arg name="initial_pose_y" value="1.0"/>
+            <arg name="chassis_type" value="swerve"/>
+            <arg name="initial_pose_x" value="0.5"/>
+            <arg name="initial_pose_y" value="0.5"/>
             <arg name="initial_pose_yaw_deg" value="0.0"/>
-            <arg name="chassis_param_path" value="$(var chassis_param_path)"/>
+            <arg name="chassis_param_path" value="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
             <arg name="lidar_param_path" value="$(find-pkg-share krb2026b_launch)/config/lidar_params.yaml"/>
         </include>
     </group>
@@ -25,7 +28,7 @@
 
     <!-- センシング -->
     <include file="$(find-pkg-share natto_launch)/launch/sensing.launch.xml">
-        <arg name="use_laserscan_convert" value="$(var use_unity)"/>
+        <arg name="use_laserscan_convert" value="$(var laserscan_convert)"/>
     </include>
 
     <!-- コントロール -->
