@@ -28,7 +28,10 @@
 
     <!-- センシング -->
     <include file="$(find-pkg-share natto_launch)/launch/sensing.launch.xml">
-        <arg name="use_laserscan_convert" value="$(var laserscan_convert)"/>
+        <arg name="use_laserscan_convert" value="true"/>
+        <arg name="use_ransac" value="true"/>
+        <arg name="publish_frequency" value="40.0"/>
+        <arg name="lidar_param_path" value="$(find-pkg-share krb2026b_launch)/config/lidar_params.yaml"/>
     </include>
 
     <!-- コントロール -->
