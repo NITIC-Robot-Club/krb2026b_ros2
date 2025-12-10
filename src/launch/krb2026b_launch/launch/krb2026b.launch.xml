@@ -50,7 +50,7 @@
 
     <!-- 自己位置 -->
     <include file="$(find-pkg-share natto_launch)/launch/localization.launch.xml">
-        <arg name="localization_param_path" value="$(find-pkg-share krb2026b_launch)/config/localization.yaml"/>
+        <arg name="localization_param_path" value="$(find-pkg-share krb2026b_launch)/param/localization.yaml"/>
     </include>
 
     <!-- TF -->
