@@ -10,5 +10,4 @@ ament_auto_package(
     rviz
     map
     param
-    stl
 )
