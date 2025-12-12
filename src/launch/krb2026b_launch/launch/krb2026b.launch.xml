@@ -2,8 +2,8 @@
     <arg name="use_unity" default="false"/>
     <arg name="use_joy_control" default="false"/>
 
-    <let name="use_laserscan_convert" value="true" unless="$(var use_unity)"/>
-    <let name="use_laserscan_convert" value="false" if="$(var use_unity)"/>
+    <let name="not_use_unity" value="true" unless="$(var use_unity)"/>
+    <let name="not_use_unity" value="false" if="$(var use_unity)"/>
     <arg name="use_ransac" default="true"/>
     <arg name="occupancy_grid_resolution" default="0.05"/>
     <arg name="merged_lidar_publish_frequency" default="40.0"/>
@@ -13,17 +13,18 @@
     <arg name="circles_path" default="$(find-pkg-share krb2026b_launch)/map/circles.csv"/>
     <arg name="footprint_param_path" default="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
     <arg name="lidar_param_path" default="$(find-pkg-share krb2026b_launch)/config/lidar.yaml"/>
+    <arg name="localization_param_path" default="$(find-pkg-share krb2026b_launch)/param/localization.yaml"/>
     <arg name="control_param_path" default="$(find-pkg-share krb2026b_launch)/param/control.yaml"/>
     <arg name="planning_param_path" default="$(find-pkg-share krb2026b_launch)/param/planning.yaml"/>
-    <arg name="localization_param_path" default="$(find-pkg-share krb2026b_launch)/param/localization.yaml"/>
     <arg name="simulation_param_path" default="$(find-pkg-share krb2026b_launch)/param/simulation.yaml"/>
 
     <include file="$(find-pkg-share natto_launch)/launch/natto.launch.xml">
         <arg name="chassis_type" value="swerve"/>
         <arg name="publish_odom_tf" value="false"/>
         <arg name="use_joy_control" value="$(var use_joy_control)"/>
-        <arg name="use_laserscan_convert" value="$(var use_laserscan_convert)"/>
+        <arg name="use_laserscan_convert" value="$(var not_use_unity)"/>
         <arg name="use_ransac" value="$(var use_ransac)"/>
+        <arg name="launch_simulation" value="$(var not_use_unity)"/>
         <arg name="occupancy_grid_resolution" value="$(var occupancy_grid_resolution)"/>
         <arg name="merged_lidar_publish_frequency" value="$(var merged_lidar_publish_frequency)"/>
         <arg name="chassis_param_path" value="$(var chassis_param_path)"/>
