@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
-    <node name="lakibeam_front" pkg="lakibeam1" exec="lakibeam1_scan_node" output="screen" namespace="/sensing/lidar">
+    <node name="lakibeam_front" pkg="lakibeam1" exec="lakibeam1_scan_node" output="screen" namespace="/sensing/lidar" args="--ros-args --log-level WARN">
         <remap from="front" to="/sensing/lidar/laserscan/front" />
         <param from="$(find-pkg-share krb2026b_launch)/config/lidar_front.yaml"/>
     </node>
-    <node name="lakibeam_rear" pkg="lakibeam1" exec="lakibeam1_scan_node" output="screen" namespace="/sensing/lidar">
+    <node name="lakibeam_rear" pkg="lakibeam1" exec="lakibeam1_scan_node" output="screen" namespace="/sensing/lidar" args="--ros-args --log-level WARN">
         <remap from="rear" to="/sensing/lidar/laserscan/rear" />
         <param from="$(find-pkg-share krb2026b_launch)/config/lidar_rear.yaml"/>
     </node>

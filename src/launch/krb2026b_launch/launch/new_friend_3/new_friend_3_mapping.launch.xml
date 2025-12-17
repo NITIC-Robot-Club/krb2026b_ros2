@@ -3,6 +3,7 @@
         <arg name="use_joy_control" value="true"/>
         <arg name="launch_common" value="false"/>
         <arg name="launch_localization" value="false"/>
+        <arg name="use_odom_tf" value="true"/>
     </include>
 
     <node
