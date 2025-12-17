@@ -9,7 +9,7 @@
     min_curvature_speed_m_s: 0.3
     yaw_decceleration_p: 1.0
     max_acceleration_xy_m_s2_: 1.0
-    max_speed_xy_m_s: 2.0
+    max_speed_xy_m_s: 1.0
     min_speed_xy_m_s: 0.05
     max_speed_yaw_deg_s: 90.0
     min_speed_yaw_deg_s: 5.0

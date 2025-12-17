@@ -55,7 +55,7 @@ class SwerveCanBridge(Node):
             can = Can()
             can.header.stamp = self.get_clock().now().to_msg()
             can.id = 0x001 + i
-            can.dlc = 8
+            can.len = 8
             can.is_error = False
             can.is_extended = False
             can.is_rtr = False
@@ -76,7 +76,7 @@ class SwerveCanBridge(Node):
         if msg.id < 0x101 or msg.id > 0x104:
             return
 
-        if msg.dlc < 8:
+        if msg.len != 8:
             return
 
         i = msg.id - 0x101

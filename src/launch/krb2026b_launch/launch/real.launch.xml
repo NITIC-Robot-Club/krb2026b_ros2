@@ -1,7 +1,8 @@
 <launch>
     <arg name="launch_common" default="true"/>
     <arg name="launch_localization" default="true"/>
-    <arg name="use_joy_control" default="false"/>
+    <arg name="use_joy_control" default="true"/>
+    <arg name="use_odom_tf" default="false"/>
     <arg name="line_segments_path" default="$(find-pkg-share krb2026b_launch)/map/line_segments.csv"/>
 
     <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml">
@@ -9,6 +10,7 @@
         <arg name="use_joy_control" value="$(var use_joy_control)"/>
         <arg name="launch_common" value="$(var launch_common)"/>
         <arg name="launch_localization" value="$(var launch_localization)"/>
+        <arg name="use_odom_tf" value="$(var use_odom_tf)"/>
         <arg name="line_segments_path" value="$(var line_segments_path)"/>
     </include>
 
