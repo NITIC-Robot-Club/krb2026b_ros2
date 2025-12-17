@@ -13,7 +13,7 @@
     </include>
 
 
-    <node pkg="dual_laser_merger" exec="dual_laser_merger_node" name="dual_laser_merger">
+    <node pkg="dual_laser_merger" exec="dual_laser_merger_node" name="dual_laser_merger" if="$(var use_emcl2)">
         <param name="laser_1_topic" value="/sensing/lidar/laserscan/front"/>
         <param name="laser_2_topic" value="/sensing/lidar/laserscan/rear"/>
         <param name="merged_scan_topic" value="/sensing/lidar/laserscan/merged"/>
