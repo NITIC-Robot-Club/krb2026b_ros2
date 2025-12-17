@@ -1,6 +1,6 @@
 /**:
   ros__parameters:
-    odom_freq: 30
+    odom_freq: 100
     transform_tolerance: 0.2
     global_frame_id: "map"
     odom_frame_id: "odom"
@@ -23,4 +23,4 @@
     odom_fw_dev_per_rot: 0.1
     odom_rot_dev_per_fw: 0.1
     odom_rot_dev_per_rot: 0.1
-    laser_likelihood_max_dist: 0.5
+    laser_likelihood_max_dist: 0.1

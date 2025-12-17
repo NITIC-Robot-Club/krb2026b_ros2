@@ -5,7 +5,8 @@
     <arg name="use_joy_control" default="false"/>
     <arg name="use_laserscan_convert" default="true"/>
     <arg name="use_ransac" default="true"/>
-    <arg name="occupancy_grid_resolution" default="0.05"/>
+    <arg name="use_odom_tf" default="false"/>
+    <arg name="occupancy_grid_resolution" default="0.05./"/>
     <arg name="merged_lidar_publish_frequency" default="40.0"/>
 
     <arg name="chassis_param_path" default="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
@@ -20,7 +21,7 @@
 
     <include file="$(find-pkg-share natto_launch)/launch/natto.launch.xml">
         <arg name="chassis_type" value="swerve"/>
-        <arg name="publish_odom_tf" value="true"/>
+        <arg name="use_odom_tf" value="$(var use_odom_tf)"/>
 
         <arg name="launch_simulation" value="$(var launch_simulation)"/>
         <arg name="launch_common" value="$(var launch_common)"/>

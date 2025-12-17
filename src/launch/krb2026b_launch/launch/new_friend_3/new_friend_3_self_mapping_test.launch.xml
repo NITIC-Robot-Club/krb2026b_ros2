@@ -1,0 +1,20 @@
+<launch>
+    <node pkg="nav2_map_server" exec="map_server" name="map_server" output="screen"
+        args="--ros-args -p yaml_filename:=$(find-pkg-share krb2026b_launch)/map/new_friend_3/map.yaml">
+        <remap from="map" to="/common/occupancy_grid"/>
+    </node>
+    <node pkg="nav2_lifecycle_manager" exec="lifecycle_manager" name="lifecycle_manager_map" output="screen"
+        args="--ros-args
+            -p autostart:=true
+            -p node_names:=['map_server']"/>
+    
+    <node pkg="natto_map" exec="map_loader" name="map_loader" namespace="/common">
+        <param name="line_segments_path" value="$(find-pkg-share krb2026b_launch)/map/new_friend_3/line_segments.csv"/>
+    </node>
+
+    <include file="$(find-pkg-share natto_launch)/launch/components/visualization.launch.xml">
+        <arg name="rviz_path" value="$(find-pkg-share natto_launch)/rviz/sample.rviz"/>
+        <arg name="chassis_param_path" value="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
+        <arg name="chassis_type" value="swerve"/>
+    </include>
+</launch>
