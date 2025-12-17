@@ -1,9 +1,9 @@
 <launch>
-    <arg name="use_unity" default="false"/>
+    <arg name="launch_simulation" default="false"/>
+    <arg name="launch_common" default="true"/>
+    <arg name="launch_localization" default="true"/>
     <arg name="use_joy_control" default="false"/>
-
-    <let name="not_use_unity" value="true" unless="$(var use_unity)"/>
-    <let name="not_use_unity" value="false" if="$(var use_unity)"/>
+    <arg name="use_laserscan_convert" default="true"/>
     <arg name="use_ransac" default="true"/>
     <arg name="occupancy_grid_resolution" default="0.05"/>
     <arg name="merged_lidar_publish_frequency" default="40.0"/>
@@ -14,17 +14,20 @@
     <arg name="footprint_param_path" default="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
     <arg name="lidar_param_path" default="$(find-pkg-share krb2026b_launch)/config/lidar.yaml"/>
     <arg name="localization_param_path" default="$(find-pkg-share krb2026b_launch)/param/localization.yaml"/>
-    <arg name="control_param_path" default="$(find-pkg-share krb2026b_launch)/param/control.yaml"/>
     <arg name="planning_param_path" default="$(find-pkg-share krb2026b_launch)/param/planning.yaml"/>
+    <arg name="control_param_path" default="$(find-pkg-share krb2026b_launch)/param/control.yaml"/>
     <arg name="simulation_param_path" default="$(find-pkg-share krb2026b_launch)/param/simulation.yaml"/>
 
     <include file="$(find-pkg-share natto_launch)/launch/natto.launch.xml">
         <arg name="chassis_type" value="swerve"/>
-        <arg name="publish_odom_tf" value="false"/>
+        <arg name="publish_odom_tf" value="true"/>
+
+        <arg name="launch_simulation" value="$(var launch_simulation)"/>
+        <arg name="launch_common" value="$(var launch_common)"/>
+        <arg name="launch_localization" value="$(var launch_localization)"/>
         <arg name="use_joy_control" value="$(var use_joy_control)"/>
-        <arg name="use_laserscan_convert" value="$(var not_use_unity)"/>
+        <arg name="use_laserscan_convert" value="$(var use_laserscan_convert)"/>
         <arg name="use_ransac" value="$(var use_ransac)"/>
-        <arg name="launch_simulation" value="$(var not_use_unity)"/>
         <arg name="occupancy_grid_resolution" value="$(var occupancy_grid_resolution)"/>
         <arg name="merged_lidar_publish_frequency" value="$(var merged_lidar_publish_frequency)"/>
         <arg name="chassis_param_path" value="$(var chassis_param_path)"/>
@@ -32,15 +35,15 @@
         <arg name="circles_path" value="$(var circles_path)"/>
         <arg name="footprint_param_path" value="$(var footprint_param_path)"/>
         <arg name="lidar_param_path" value="$(var lidar_param_path)"/>
-        <arg name="control_param_path" value="$(var control_param_path)"/>
-        <arg name="planning_param_path" value="$(var planning_param_path)"/>
         <arg name="localization_param_path" value="$(var localization_param_path)"/>
+        <arg name="planning_param_path" value="$(var planning_param_path)"/>
+        <arg name="control_param_path" value="$(var control_param_path)"/>
         <arg name="simulation_param_path" value="$(var simulation_param_path)"/>
     </include>
 
     <!-- TF -->
     <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_lidar_front" output="screen"
-        args="+0.25 0 0 0 0 0 1 base_link lidar_front"/>
+        args="+0.2 0 0 0 0 0 1 base_link lidar_front"/>
     <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_lidar_rear" output="screen"
-        args="-0.25 0 0 0 0 1 0 base_link lidar_rear"/>
+        args="-0.2 0 0 0 0 1 0 base_link lidar_rear"/>
 </launch>

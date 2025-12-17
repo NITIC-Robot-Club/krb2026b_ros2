@@ -1,6 +1,6 @@
 <launch>
     <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml">
-        <arg name="use_unity" value="false"/>
+        <arg name="launch_simulation" value="true"/>
         <arg name="use_joy_control" value="false"/>
     </include>
 </launch>

@@ -1,0 +1,6 @@
+/**:
+  ros__parameters:
+    port: "2368"
+    output_topic: "front"
+    frame_id: "lidar_front"
+    hostip: "0.0.0.0"
