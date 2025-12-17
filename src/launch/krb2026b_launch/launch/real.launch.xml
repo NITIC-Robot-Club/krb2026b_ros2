@@ -1,0 +1,17 @@
+<launch>
+    <arg name="launch_common" default="true"/>
+    <arg name="launch_localization" default="true"/>
+    <arg name="use_joy_control" default="false"/>
+
+    <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml">
+        <arg name="launch_simulation" value="false"/>
+        <arg name="use_joy_control" value="$(var use_joy_control)"/>
+        <arg name="launch_common" value="$(var launch_common)"/>
+        <arg name="launch_localization" value="$(var launch_localization)"/>
+    </include>
+
+    <node pkg="natto_canable" exec="canable" name="canable" output="screen">
+    </node>
+
+    <include file="$(find-pkg-share krb2026b_launch)/launch/sensing.launch.xml"/>
+</launch>

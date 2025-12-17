@@ -1,0 +1,28 @@
+<launch>
+    <include file="$(find-pkg-share krb2026b_launch)/launch/real.launch.xml">
+        <arg name="use_joy_control" value="true"/>
+        <arg name="launch_common" value="false"/>
+        <arg name="launch_localization" value="false"/>
+    </include>
+
+    <node
+        pkg="cartographer_ros"
+        exec="cartographer_node"
+        name="cartographer_node"
+        output="screen"
+        args="-configuration_directory $(find-pkg-share krb2026b_launch)/config/cartographer
+            -configuration_basename krb2026b_2d.lua">
+        <remap from="odom" to="/localization/wheel_odometry/odometry"/>
+        <remap from="points2" to="/sensing/lidar/pointcloud2/merged"/>
+        <remap from="map" to="/common/occupancy_grid"/>
+    </node>
+
+    <node
+        pkg="cartographer_ros"
+        exec="cartographer_occupancy_grid_node"
+        name="occupancy_grid_node"
+        output="screen"
+        args="-resolution 0.02 -publish_period_sec 1.0">
+        <remap from="map" to="/common/occupancy_grid"/>
+    </node>
+</launch>
