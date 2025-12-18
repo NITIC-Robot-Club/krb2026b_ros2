@@ -1,6 +1,6 @@
 <launch>
     <arg name="launch_simulation" default="false"/>
-    <arg name="launch_common" default="true"/>
+    <arg name="publish_map" default="true"/>
     <arg name="launch_localization" default="true"/>
     <arg name="use_joy_control" default="false"/>
     <arg name="use_laserscan_convert" default="true"/>
@@ -24,7 +24,7 @@
         <arg name="use_odom_tf" value="$(var use_odom_tf)"/>
 
         <arg name="launch_simulation" value="$(var launch_simulation)"/>
-        <arg name="launch_common" value="$(var launch_common)"/>
+        <arg name="publish_map" value="$(var publish_map)"/>
         <arg name="launch_localization" value="$(var launch_localization)"/>
         <arg name="use_joy_control" value="$(var use_joy_control)"/>
         <arg name="use_laserscan_convert" value="$(var use_laserscan_convert)"/>
@@ -46,5 +46,5 @@
     <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_lidar_front" output="screen"
         args="+0.2 0 0 0 0 0 1 base_link lidar_front"/>
     <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_lidar_rear" output="screen"
-        args="-0.2 0 0 0 0 1 0 base_link lidar_rear"/>
+        args="-0.2 0 0 0 0 0.99 -0.01 base_link lidar_rear"/>
 </launch>
