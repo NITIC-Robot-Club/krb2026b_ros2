@@ -1,6 +1,6 @@
 <launch>
     <node pkg="nav2_map_server" exec="map_server" name="map_server" output="screen"
-        args="--ros-args -p yaml_filename:=$(find-pkg-share krb2026b_launch)/map/new_friend_3/map.yaml">
+        args="--ros-args -p yaml_filename:=$(find-pkg-share krb2026b_launch)/map/new_friend_3/map1.yaml">
         <remap from="map" to="/common/occupancy_grid"/>
     </node>
     <node pkg="nav2_lifecycle_manager" exec="lifecycle_manager" name="lifecycle_manager_map" output="screen"
