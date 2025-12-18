@@ -1,6 +1,0 @@
-<launch>
-    <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml">
-        <arg name="launch_simulation" value="false"/>
-        <arg name="use_joy_control" value="true"/>
-    </include>
-</launch>
