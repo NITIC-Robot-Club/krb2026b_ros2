@@ -17,6 +17,7 @@
     <arg name="localization_param_path" default="$(find-pkg-share krb2026b_launch)/param/localization.yaml"/>
     <arg name="planning_param_path" default="$(find-pkg-share krb2026b_launch)/param/planning.yaml"/>
     <arg name="control_param_path" default="$(find-pkg-share krb2026b_launch)/param/control.yaml"/>
+    <arg name="controller_param_path" default="$(find-pkg-share krb2026b_launch)/config/controller.yaml"/>
     <arg name="simulation_param_path" default="$(find-pkg-share krb2026b_launch)/param/simulation.yaml"/>
 
     <include file="$(find-pkg-share natto_launch)/launch/natto.launch.xml">
@@ -39,6 +40,7 @@
         <arg name="localization_param_path" value="$(var localization_param_path)"/>
         <arg name="planning_param_path" value="$(var planning_param_path)"/>
         <arg name="control_param_path" value="$(var control_param_path)"/>
+        <arg name="controller_param_path" value="$(var controller_param_path)"/>
         <arg name="simulation_param_path" value="$(var simulation_param_path)"/>
     </include>
 
