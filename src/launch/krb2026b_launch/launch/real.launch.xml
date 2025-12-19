@@ -10,6 +10,7 @@
         <arg name="launch_localization" value="$(var launch_localization)"/>
         <arg name="use_odom_tf" value="$(var use_odom_tf)"/>
         <arg name="line_segments_path" value="$(var line_segments_path)"/>
+        <arg name="initial_allow_auto_drive" value="false"/>
     </include>
 
     <node pkg="natto_canable" exec="canable" name="canable" output="screen">
