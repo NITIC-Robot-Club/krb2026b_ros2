@@ -8,6 +8,7 @@ ament_auto_package(
     config
     launch
     rviz
+    state_graph
     map
     param
 )

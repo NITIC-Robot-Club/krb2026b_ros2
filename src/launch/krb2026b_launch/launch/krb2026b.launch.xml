@@ -7,6 +7,7 @@
     <arg name="use_odom_tf" default="false"/>
     <arg name="occupancy_grid_resolution" default="0.05"/>
     <arg name="merged_lidar_publish_frequency" default="30.0"/>
+    <arg name="initial_allow_auto_drive" default="true"/>
 
     <arg name="chassis_param_path" default="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>
     <arg name="line_segments_path" default="$(find-pkg-share krb2026b_launch)/map/line_segments.csv"/>
@@ -18,11 +19,12 @@
     <arg name="control_param_path" default="$(find-pkg-share krb2026b_launch)/param/control.yaml"/>
     <arg name="controller_param_path" default="$(find-pkg-share krb2026b_launch)/config/controller.yaml"/>
     <arg name="simulation_param_path" default="$(find-pkg-share krb2026b_launch)/param/simulation.yaml"/>
+    <arg name="state_graph_path" default=""/>
 
     <include file="$(find-pkg-share natto_launch)/launch/natto.launch.xml">
         <arg name="chassis_type" value="swerve"/>
         <arg name="use_odom_tf" value="$(var use_odom_tf)"/>
-
+        <arg name="initial_allow_auto_drive" value="$(var initial_allow_auto_drive)"/>
         <arg name="launch_simulation" value="$(var launch_simulation)"/>
         <arg name="publish_map" value="$(var publish_map)"/>
         <arg name="launch_localization" value="$(var launch_localization)"/>
@@ -40,6 +42,7 @@
         <arg name="control_param_path" value="$(var control_param_path)"/>
         <arg name="controller_param_path" value="$(var controller_param_path)"/>
         <arg name="simulation_param_path" value="$(var simulation_param_path)"/>
+        <arg name="state_graph_path" value="$(var state_graph_path)"/>
     </include>
 
     <!-- TF -->
