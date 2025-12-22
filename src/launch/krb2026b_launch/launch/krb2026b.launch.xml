@@ -5,7 +5,7 @@
     <arg name="use_laserscan_convert" default="true"/>
     <arg name="use_ransac" default="true"/>
     <arg name="use_odom_tf" default="false"/>
-    <arg name="occupancy_grid_resolution" default="0.05"/>
+    <arg name="occupancy_grid_resolution" default="0.02"/>
     <arg name="merged_lidar_publish_frequency" default="30.0"/>
     <arg name="initial_allow_auto_drive" default="true"/>
 
@@ -43,6 +43,7 @@
         <arg name="controller_param_path" value="$(var controller_param_path)"/>
         <arg name="simulation_param_path" value="$(var simulation_param_path)"/>
         <arg name="state_graph_path" value="$(var state_graph_path)"/>
+        <arg name="state_timeout_sec" value="3.0"/>
     </include>
 
     <!-- TF -->
