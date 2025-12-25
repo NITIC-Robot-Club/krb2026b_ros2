@@ -1,0 +1,29 @@
+/**:
+  ros__parameters:
+    joint_state_command_topics: ["/swerve/joint_state"]
+    command_transmit_frequency: 1000.0
+    parameter_transmit_frequency: 10.0
+    rmc_num: 1
+    rmc_0:
+      motor_num: 8
+      feedback_period_ms: 1
+      state_period_ms: 10
+      joint_name: ["swerve_steer_0", "swerve_steer_1", "swerve_steer_2", "swerve_steer_3",
+                    "swerve_drive_0", "swerve_drive_1", "swerve_drive_2", "swerve_drive_3"]
+      control_mode: [2, 2, 2, 2, 1, 1, 1, 1]
+      ratio: [17.188733853924695, 17.188733853924695, 17.188733853924695, 17.188733853924695,
+              5.052631578947368, 5.052631578947368, 5.052631578947368, 5.052631578947368]
+      max_current: [10000, 10000, 10000, 10000, 16384, 16384, 16384, 16384]
+      max_speed: [10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0]
+      max_position: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      min_position: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      speed_kp: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      speed_ki: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      speed_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      position_kp: [500.0, 500.0, 500.0, 500.0, 0.0, 0.0, 0.0, 0.0]
+      position_ki: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      position_kd: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      stop_speed_threshold: [60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0]
+      stop_time_threshold_ms: [100, 100, 100, 100, 100, 100, 100, 100]
+      use_position_limit: [false, false, false, false, false, false, false, false]
+      
