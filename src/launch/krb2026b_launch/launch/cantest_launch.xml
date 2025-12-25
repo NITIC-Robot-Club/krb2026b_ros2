@@ -1,0 +1,10 @@
+<launch>
+    <node_container pkg="rclcpp_components" exec="component_container" name="cantest_container" namespace="/can">
+        <composable_node pkg="natto_canable" plugin="canable::canable" name="canable">
+            <param name="use_fd" value="true"/>
+        </composable_node>
+        <composable_node pkg="natto_can_bridge" plugin="can_bridge::can_bridge" name="can_bridge">
+            <param from="$(find-pkg-share krb2026b_launch)/config/can.yaml"/>
+        </composable_node>
+    </node_container>
+</launch>
