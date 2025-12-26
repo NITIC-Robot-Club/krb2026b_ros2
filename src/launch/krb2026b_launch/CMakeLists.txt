@@ -11,4 +11,5 @@ ament_auto_package(
     state_graph
     map
     param
+    urdf
 )
