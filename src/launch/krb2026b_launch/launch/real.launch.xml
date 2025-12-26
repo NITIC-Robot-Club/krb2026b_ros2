@@ -10,11 +10,35 @@
         <arg name="launch_localization" value="$(var launch_localization)"/>
         <arg name="use_odom_tf" value="$(var use_odom_tf)"/>
         <arg name="line_segments_path" value="$(var line_segments_path)"/>
-        <arg name="initial_allow_auto_drive" value="false"/>
+        <arg name="initial_allow_auto_drive" value="true"/>
     </include>
 
-    <node pkg="natto_canable" exec="canable" name="canable" output="screen">
+    <node_container pkg="rclcpp_components" exec="component_container" name="cantest_container" namespace="/can">
+        <composable_node pkg="natto_canable" plugin="canable::canable" name="canable">
+            <param name="use_fd" value="true"/>
+            <remap from="transmit" to="/can/transmit"/>
+            <remap from="receive" to="/can/receive"/>
+        </composable_node>
+        <composable_node pkg="natto_can_bridge" plugin="can_bridge::can_bridge" name="can_bridge">
+            <param from="$(find-pkg-share krb2026b_launch)/config/can.yaml"/>
+            <remap from="transmit" to="/can/transmit"/>
+            <remap from="receive" to="/can/receive"/>
+        </composable_node>
+    </node_container>
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher">
+        <param name="robot_description" value="$(command 'xacro $(find-pkg-share krb2026b_launch)/urdf/krb2026b.urdf.xacro')"/>
+        <param name="frame_prefix" value=""/>
+        <remap from="/joint_states" to="/joint_states"/>
     </node>
 
-    <include file="$(find-pkg-share krb2026b_launch)/launch/sensing.launch.xml"/>
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="command_robot_state_publisher">
+        <param name="robot_description" value="$(command 'xacro $(find-pkg-share krb2026b_launch)/urdf/krb2026b.urdf.xacro')"/>
+        <param name="frame_prefix" value="command/"/>
+        <remap from="/joint_states" to="/command_joint_states"/>
+    </node>
+
+    <node pkg="tf2_ros" exec="static_transform_publisher" name="base_to_command_base" output="screen" args="0 0 0 0 0 0 base_link command/base_link"/>
+
+    <!-- <include file="$(find-pkg-share krb2026b_launch)/launch/sensing.launch.xml"/> -->
 </launch>
