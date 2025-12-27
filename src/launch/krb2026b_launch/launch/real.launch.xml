@@ -23,6 +23,7 @@
             <param from="$(find-pkg-share krb2026b_launch)/config/can.yaml"/>
             <remap from="transmit" to="/can/transmit"/>
             <remap from="receive" to="/can/receive"/>
+            <remap from="power" to="/controller/power"/>
         </composable_node>
     </node_container>
 
