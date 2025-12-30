@@ -1,8 +1,9 @@
 /**:
   ros__parameters:
+    chassis_type : "swerve"
     wheel_radius : 0.0375
     infinite_swerve_mode : true
-    wheel_position_x : [+0.173, -0.173, -0.173, +0.173]
-    wheel_position_y : [+0.173, +0.173, -0.173, -0.173]
     footprint_points_x : [+0.257, +0.257, -0.257, -0.257]
     footprint_points_y : [+0.257, -0.257, -0.257, +0.257]
+    wheel_names : ["swerve_wheel_0", "swerve_wheel_1", "swerve_wheel_2", "swerve_wheel_3"]
+    steer_names : ["swerve_steer_0", "swerve_steer_1", "swerve_steer_2", "swerve_steer_3"]
