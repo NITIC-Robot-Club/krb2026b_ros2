@@ -59,4 +59,21 @@
   <xacro:swerve steer_name="swerve_steer_2" wheel_name="swerve_wheel_2" x="-0.173" y="-0.173"/>
   <xacro:swerve steer_name="swerve_steer_3" wheel_name="swerve_wheel_3" x="0.173"  y="-0.173"/>
 
+  <!-- ==================== -->
+  <!-- Lidar frames         -->
+  <!-- ==================== -->
+  <link name="lidar_front"/>
+  <joint name="base_link_to_lidar_front" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_front"/>
+    <origin xyz="0.2 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="lidar_rear"/>
+  <joint name="base_link_to_lidar_rear" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_rear"/>
+    <origin xyz="-0.2 0 0" rpy="0 0 3.1415926535"/>
+  </joint>
+
 </robot>
