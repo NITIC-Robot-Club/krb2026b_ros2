@@ -6,4 +6,4 @@
     footprint_points_x : [+0.257, +0.257, -0.257, -0.257]
     footprint_points_y : [+0.257, -0.257, -0.257, +0.257]
     wheel_names : ["swerve_wheel_0", "swerve_wheel_1", "swerve_wheel_2", "swerve_wheel_3"]
-    steer_names : ["swerve_steer_0", "swerve_steer_1", "swerve_steer_2", "swerve_steer_3"]
+    wheel_base_names : ["swerve_wheel_base_0", "swerve_wheel_base_1", "swerve_wheel_base_2", "swerve_wheel_base_3"]
