@@ -15,15 +15,15 @@
   <!-- ==================== -->
   <!-- Wheel module macro    -->
   <!-- ==================== -->
-  <xacro:macro name="swerve" params="steer_name wheel_name x y">
+  <xacro:macro name="swerve" params="wheel_base_name wheel_name x y">
 
     <!-- steer link -->
-    <link name="${steer_name}_link" />
+    <link name="${wheel_base_name}_link" />
 
     <!-- steer joint -->
-    <joint name="${steer_name}" type="continuous">
+    <joint name="${wheel_base_name}" type="continuous">
       <parent link="base_link"/>
-      <child link="${steer_name}_link"/>
+      <child link="${wheel_base_name}_link"/>
       <origin xyz="${x} ${y} ${wheel_radius}" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
     </joint>
@@ -43,7 +43,7 @@
 
     <!-- wheel joint -->
     <joint name="${wheel_name}" type="continuous">
-      <parent link="${steer_name}_link"/>
+      <parent link="${wheel_base_name}_link"/>
       <child link="${wheel_name}_link"/>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
@@ -54,10 +54,10 @@
   <!-- ==================== -->
   <!-- Wheel instances       -->
   <!-- ==================== -->
-  <xacro:swerve steer_name="swerve_steer_0" wheel_name="swerve_wheel_0" x="0.173"  y="0.173"/>
-  <xacro:swerve steer_name="swerve_steer_1" wheel_name="swerve_wheel_1" x="-0.173" y="0.173"/>
-  <xacro:swerve steer_name="swerve_steer_2" wheel_name="swerve_wheel_2" x="-0.173" y="-0.173"/>
-  <xacro:swerve steer_name="swerve_steer_3" wheel_name="swerve_wheel_3" x="0.173"  y="-0.173"/>
+  <xacro:swerve wheel_base_name="swerve_wheel_base_0" wheel_name="swerve_wheel_0" x="0.173"  y="0.173"/>
+  <xacro:swerve wheel_base_name="swerve_wheel_base_1" wheel_name="swerve_wheel_1" x="-0.173" y="0.173"/>
+  <xacro:swerve wheel_base_name="swerve_wheel_base_2" wheel_name="swerve_wheel_2" x="-0.173" y="-0.173"/>
+  <xacro:swerve wheel_base_name="swerve_wheel_base_3" wheel_name="swerve_wheel_3" x="0.173"  y="-0.173"/>
 
   <!-- ==================== -->
   <!-- Lidar frames         -->
