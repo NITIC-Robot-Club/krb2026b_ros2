@@ -8,7 +8,7 @@
       motor_num: 8
       feedback_period_ms: 1
       state_period_ms: 10
-      joint_name: ["swerve_steer_0", "swerve_steer_1", "swerve_steer_2", "swerve_steer_3",
+      joint_name: ["swerve_wheel_base_0", "swerve_wheel_base_1", "swerve_wheel_base_2", "swerve_wheel_base_3",
                    "swerve_wheel_0", "swerve_wheel_1", "swerve_wheel_2", "swerve_wheel_3"]
       control_mode: [2, 2, 2, 2, 1, 1, 1, 1]
       ratio: [108.0, 108.0, 108.0, 108.0,
