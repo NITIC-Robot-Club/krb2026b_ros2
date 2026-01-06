@@ -1,15 +1,15 @@
 /**:
   ros__parameters:
-    frequency: 60.0
+    frequency: 30.0
     map_frame_id: map
-    odom_frame_id: odom
+    odom_frame_id: map
     base_frame_id: base_link
     num_particles: 500
     initial_pose_x: 0.5
     initial_pose_y: 0.5
     initial_pose_yaw_deg: 0.0
     motion_noise_xx: 0.2
-    motion_noise_xy: 0.1
+    motion_noise_xy: 0.0
     motion_noise_yy: 0.2
     motion_noise_yaw_deg: 1.0
     normal_noise_position : 0.01
