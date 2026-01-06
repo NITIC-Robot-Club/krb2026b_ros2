@@ -12,4 +12,5 @@ ament_auto_package(
     map
     param
     urdf
+    meshes
 )

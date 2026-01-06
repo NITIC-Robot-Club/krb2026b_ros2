@@ -7,10 +7,22 @@
   <xacro:property name="wheel_radius" value="0.0375"/>
   <xacro:property name="wheel_width"  value="0.02"/>
 
+  <material name="white">
+    <color rgba="1.000 1.000 1.000 1.0"/>
+  </material>
+
   <!-- ==================== -->
   <!-- Base link             -->
   <!-- ==================== -->
-  <link name="base_link"/>
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://krb2026b_launch/meshes/base_link.stl"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
 
   <!-- ==================== -->
   <!-- Wheel module macro    -->
@@ -18,7 +30,15 @@
   <xacro:macro name="swerve" params="wheel_base_name wheel_name x y">
 
     <!-- steer link -->
-    <link name="${wheel_base_name}_link" />
+    <link name="${wheel_base_name}_link">
+      <visual>
+        <origin xyz="0 0 0.17485" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://krb2026b_launch/meshes/wheel.stl"/>
+        </geometry>
+        <material name="white"/>
+      </visual>
+    </link>
 
     <!-- steer joint -->
     <joint name="${wheel_base_name}" type="continuous">
@@ -75,5 +95,95 @@
     <child link="lidar_rear"/>
     <origin xyz="-0.2 0 0" rpy="0 0 3.1415926535"/>
   </joint>
+
+  <joint name="belt_launcher" type="prismatic">
+    <origin xyz="-0.15555731148 0.0 0.18967226953" rpy="0.0 -0.43633231299 0.0"/>
+    <axis xyz="1 0 0"/>
+    <parent link="base_link"/>
+    <child link="belt_launcher_link"/>
+    <limit lower="0.0" upper="0.5" effort="0" velocity="0"/>
+  </joint>
+
+  <link name="belt_launcher_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://krb2026b_launch/meshes/belt_launcher.stl"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <joint name="collector_arm_left" type="revolute">
+    <origin xyz="-0.052075 0.233296 0.193222" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0 1 0"/>
+    <parent link="base_link"/>
+    <child link="collector_arm_left_link"/>
+    <limit lower="-3.14159" upper="3.14159" effort="0" velocity="0"/>
+  </joint>
+
+  <link name="collector_arm_left_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://krb2026b_launch/meshes/collector_arm_left.stl"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <joint name="collector_hand_left" type="revolute">
+    <origin xyz="-0.149379 0.02 0.028125" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+    <parent link="collector_arm_left_link"/>
+    <child link="collector_hand_left_link"/>
+    <limit lower="-3.14159" upper="3.14159" effort="0" velocity="0"/>
+  </joint>
+
+  <link name="collector_hand_left_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://krb2026b_launch/meshes/collector_hand_left.stl"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <joint name="collector_arm_right" type="revolute">
+    <origin xyz="-0.052075 -0.233296 0.193222" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0 1 0"/>
+    <parent link="base_link"/>
+    <child link="collector_arm_right_link"/>
+    <limit lower="-3.14159" upper="3.14159" effort="0" velocity="0"/>
+  </joint>
+
+  <link name="collector_arm_right_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://krb2026b_launch/meshes/collector_arm_right.stl"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+
+  <joint name="collector_hand_right" type="revolute">
+    <origin xyz="-0.149379 -0.02 0.028125" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0 0 -1"/>
+    <parent link="collector_arm_right_link"/>
+    <child link="collector_hand_right_link"/>
+    <limit lower="-3.14159" upper="3.14159" effort="0" velocity="0"/>
+  </joint>
+
+  <link name="collector_hand_right_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://krb2026b_launch/meshes/collector_hand_right.stl"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
 
 </robot>
