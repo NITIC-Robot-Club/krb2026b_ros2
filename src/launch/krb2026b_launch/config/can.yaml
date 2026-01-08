@@ -35,26 +35,26 @@
       period_ms: 1
       joint_name: "swerve_wheel_base_0_as5600"
       as5600:
-        zero_position: 0.0
-        ratio: 1.0
+        zero_position: 1.7180618366025517 # -2.50346 * -1 - math.pi/4
+        ratio: -1.0
     i2c_1:
       device_type: "as5600"
       period_ms: 1
       joint_name: "swerve_wheel_base_1_as5600"
       as5600:
         zero_position: 0.0
-        ratio: 1.0
+        ratio: -1.0
     i2c_2:
       device_type: "as5600"
       period_ms: 1
       joint_name: "swerve_wheel_base_2_as5600"
       as5600:
         zero_position: 0.0
-        ratio: 1.0
+        ratio: -1.0
     i2c_3:
       device_type: "as5600"
       period_ms: 1
       joint_name: "swerve_wheel_base_3_as5600"
       as5600:
         zero_position: 0.0
-        ratio: 1.0
+        ratio: -1.0
