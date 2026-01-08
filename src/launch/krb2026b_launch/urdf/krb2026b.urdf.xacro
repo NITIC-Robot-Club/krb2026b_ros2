@@ -48,6 +48,17 @@
       <axis xyz="0 0 1"/>
     </joint>
 
+    <!-- as5600 link -->
+    <link name="${wheel_base_name}_as5600_link"/>
+
+    <!-- as5600 joint -->
+    <joint name="${wheel_base_name}_as5600" type="continuous">
+      <parent link="base_link"/>
+      <child link="${wheel_base_name}_as5600_link"/>
+      <origin xyz="${x} ${y} 0.1" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+    </joint>
+
     <!-- wheel link -->
     <link name="${wheel_name}_link">
       <visual>

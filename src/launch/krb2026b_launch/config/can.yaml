@@ -10,13 +10,13 @@
       state_period_ms: 10
       joint_name: ["swerve_wheel_base_0", "swerve_wheel_base_1", "swerve_wheel_base_2", "swerve_wheel_base_3",
                    "swerve_wheel_0", "swerve_wheel_1", "swerve_wheel_2", "swerve_wheel_3"]
-      control_mode: [2, 2, 2, 2, 1, 1, 1, 1]
+      control_mode: ["position", "position", "position", "position", "speed", "speed", "speed", "speed"]
       ratio: [108.0, 108.0, 108.0, 108.0,
               -5.052631578947368, -5.052631578947368, -5.052631578947368, -5.052631578947368]
-      origin_get_mode: [0, 0, 0, 0, 0, 0, 0, 0]
+      origin_get_mode: ["manual", "manual", "manual", "manual", "manual", "manual", "manual", "manual"]
       origin_target: [0, 0, 0, 0, 0, 0, 0, 0]
       position_offset: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-      limit_switch_id: [0, 0, 0, 0, 0, 0, 0, 0]
+      origin_id: [0, 0, 0, 0, 0, 0, 0, 0]
       max_position: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       min_position: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       speed_kp: [2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0]
@@ -28,3 +28,33 @@
       stop_speed_threshold: [60, 60, 60, 60, 60, 60, 60, 60]
       stop_time_threshold_ms: [100, 100, 100, 100, 100, 100, 100, 100]
       use_position_limit: [false, false, false, false, false, false, false, false]
+    
+    i2c_num: 4
+    i2c_0:
+      device_type: "as5600"
+      period_ms: 1
+      joint_name: "swerve_wheel_base_0_as5600"
+      as5600:
+        zero_position: 0.0
+        ratio: 1.0
+    i2c_1:
+      device_type: "as5600"
+      period_ms: 1
+      joint_name: "swerve_wheel_base_1_as5600"
+      as5600:
+        zero_position: 0.0
+        ratio: 1.0
+    i2c_2:
+      device_type: "as5600"
+      period_ms: 1
+      joint_name: "swerve_wheel_base_2_as5600"
+      as5600:
+        zero_position: 0.0
+        ratio: 1.0
+    i2c_3:
+      device_type: "as5600"
+      period_ms: 1
+      joint_name: "swerve_wheel_base_3_as5600"
+      as5600:
+        zero_position: 0.0
+        ratio: 1.0
