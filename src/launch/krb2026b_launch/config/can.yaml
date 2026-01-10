@@ -1,22 +1,23 @@
 /**:
   ros__parameters:
     joint_state_command_topics: ["/swerve/command_joint_states"]
-    command_transmit_frequency: 1000.0
+    command_transmit_frequency: 100.0
     parameter_transmit_frequency: 10.0
     rmc_num: 1
     rmc_0:
       motor_num: 8
-      feedback_period_ms: 1
-      state_period_ms: 10
+      feedback_period_ms: 10
+      state_period_ms: 100
+      timeout_ms: 255
       joint_name: ["swerve_wheel_base_0", "swerve_wheel_base_1", "swerve_wheel_base_2", "swerve_wheel_base_3",
                    "swerve_wheel_0", "swerve_wheel_1", "swerve_wheel_2", "swerve_wheel_3"]
       control_mode: ["position", "position", "position", "position", "speed", "speed", "speed", "speed"]
       ratio: [108.0, 108.0, 108.0, 108.0,
               -5.052631578947368, -5.052631578947368, -5.052631578947368, -5.052631578947368]
-      origin_get_mode: ["manual", "manual", "manual", "manual", "manual", "manual", "manual", "manual"]
+      origin_get_mode: ["as5600", "as5600", "as5600", "as5600", "manual", "manual", "manual", "manual"]
       origin_target: [0, 0, 0, 0, 0, 0, 0, 0]
       position_offset: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-      origin_id: [0, 0, 0, 0, 0, 0, 0, 0]
+      origin_id: [0, 1, 2, 3, 0, 0, 0, 0]
       max_position: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       min_position: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       speed_kp: [2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0]
@@ -32,29 +33,29 @@
     i2c_num: 4
     i2c_0:
       device_type: "as5600"
-      period_ms: 1
+      period_ms: 10
       joint_name: "swerve_wheel_base_0_as5600"
       as5600:
-        zero_position: 1.7180618366025517 # -2.50346 * -1 - math.pi/4
+        zero_position: 1.7096018366025518 # -2.520 * -1 - math.pi/4
         ratio: -1.0
     i2c_1:
       device_type: "as5600"
-      period_ms: 1
+      period_ms: 10
       joint_name: "swerve_wheel_base_1_as5600"
       as5600:
         zero_position: 0.0
         ratio: -1.0
     i2c_2:
       device_type: "as5600"
-      period_ms: 1
+      period_ms: 10
       joint_name: "swerve_wheel_base_2_as5600"
       as5600:
         zero_position: 0.0
         ratio: -1.0
     i2c_3:
       device_type: "as5600"
-      period_ms: 1
+      period_ms: 10
       joint_name: "swerve_wheel_base_3_as5600"
       as5600:
-        zero_position: 0.0
+        zero_position: 2.959398163397448 # -2.174*-1 + math.pi/4
         ratio: -1.0
