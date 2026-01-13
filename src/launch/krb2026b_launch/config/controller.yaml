@@ -1,7 +1,42 @@
 /**:
   ros__parameters:
-    power_on_button: 1
-    power_off_button: 0
-    allow_auto_drive_method: "hold"
-    allow_auto_drive_on_button: 2
-    allow_auto_drive_off_button: 3
+    num_button: 12
+    button_0:
+      function: "power"
+      mode: "toggle_off"
+    button_1:
+      function: "power"
+      mode: "toggle_on"
+    button_2:
+      function: "allow_auto_drive"
+      mode: "hold"
+    button_3:
+      function: "joint_position"
+      mode: "hold"
+      joint_name: "belt_launcher"
+      position_on: 0.5
+      position_off: 0.0
+    button_9:
+      function: "joint_position"
+      mode: "hold"
+      joint_name: "collector_hand_left"
+      position_on: 2.7
+      position_off: 0.0
+    button_10:
+      function: "joint_position"
+      mode: "hold"
+      joint_name: "collector_hand_right"
+      position_on: 2.7
+      position_off: 0.0
+    zl:
+      function: "joint_position"
+      mode: "hold"
+      joint_name: "collector_arm_left"
+      position_on: 1.0
+      position_off: 0.0
+    zr:
+      function: "joint_position"
+      mode: "hold"
+      joint_name: "collector_arm_right"
+      position_on: 1.0
+      position_off: 0.0

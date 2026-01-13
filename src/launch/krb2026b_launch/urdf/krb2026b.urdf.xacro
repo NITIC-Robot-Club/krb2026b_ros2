@@ -145,7 +145,7 @@
 
   <joint name="collector_hand_left" type="revolute">
     <origin xyz="-0.149379 0.02 0.028125" rpy="0.0 0.0 0.0"/>
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 -1"/>
     <parent link="collector_arm_left_link"/>
     <child link="collector_hand_left_link"/>
     <limit lower="-3.14159" upper="3.14159" effort="0" velocity="0"/>
@@ -181,7 +181,7 @@
 
   <joint name="collector_hand_right" type="revolute">
     <origin xyz="-0.149379 -0.02 0.028125" rpy="0.0 0.0 0.0"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <parent link="collector_arm_right_link"/>
     <child link="collector_hand_right_link"/>
     <limit lower="-3.14159" upper="3.14159" effort="0" velocity="0"/>
