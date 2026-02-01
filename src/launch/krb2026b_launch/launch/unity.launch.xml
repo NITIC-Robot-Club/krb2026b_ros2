@@ -1,5 +1,6 @@
 <launch>
     <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml">
         <arg name="launch_simulation" value="false"/>
+        <arg name="state_graph_path" value="$(find-pkg-share krb2026b_launch)/state_graph/test.md"/>
     </include>
 </launch>

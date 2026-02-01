@@ -3,7 +3,7 @@
     joint_state_command_topics: ["/swerve/command_joint_states"]
     command_transmit_frequency: 100.0
     parameter_transmit_frequency: 10.0
-    rmc_num: 1
+    rmc_num: 2
     rmc_0:
       motor_num: 8
       feedback_period_ms: 10
@@ -29,7 +29,53 @@
       stop_speed_threshold: [60, 60, 60, 60, 60, 60, 60, 60]
       stop_time_threshold_ms: [100, 100, 100, 100, 100, 100, 100, 100]
       use_position_limit: [false, false, false, false, false, false, false, false]
-    
+    rmc_1:
+      motor_num: 2
+      feedback_period_ms: 10
+      state_period_ms: 100
+      timeout_ms: 255
+      joint_name: ["collector_arm_left", "collector_arm_right"]
+      control_mode: ["position", "position"]
+      ratio: [36.0, 36.0]
+      origin_get_mode: ["stall", "stall"]
+      origin_target: [0, 0]
+      position_offset: [0.0, 0.0]
+      origin_id: [0, 1]
+      max_position: [0.0, 0.0]
+      min_position: [0.0, 0.0]
+      speed_kp: [2.0, 2.0]
+      speed_ki: [1.8, 1.8]
+      speed_kd: [0.1, 0.1]
+      position_kp: [200.0, 200.0]
+      position_ki: [0.0, 0.0]
+      position_kd: [100.0, 100.0]
+      stop_speed_threshold: [60, 60]
+      stop_time_threshold_ms: [100, 100]
+      use_position_limit: [false, false]
+
+    nidec_num: 1
+    nidec_0:
+      motor_num: 2
+      feedback_period_ms: 10
+      state_period_ms: 100
+      timeout_ms: 255
+      joint_name: ["collector_hand_left", "collector_hand_right"]
+      control_mode: ["position", "position"]
+      ratio: [1.0, 1.0]
+      origin_get_mode: ["stall","stall"]
+      origin_target: [10, 10]
+      position_offset: [1.57, 1.57]
+      origin_id: [0,0]
+      max_position: [0.0, 0.0]
+      min_position: [0.0, 0.0]
+      max_speed: [100, 100]
+      position_kp: [1.0, 1.0]
+      position_ki: [0.0, 0.0]
+      position_kd: [0.0, 0.0]
+      stop_speed_threshold: [60, 60]
+      stop_time_threshold_ms: [100, 100]
+      use_position_limit: [false, false]
+
     i2c_num: 4
     i2c_0:
       device_type: "as5600"
