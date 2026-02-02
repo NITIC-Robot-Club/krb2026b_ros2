@@ -36,11 +36,11 @@
       timeout_ms: 255
       joint_name: ["collector_arm_left", "collector_arm_right"]
       control_mode: ["position", "position"]
-      ratio: [36.0, 36.0]
+      ratio: [-36.0, 36.0]
       origin_get_mode: ["stall", "stall"]
-      origin_target: [0, 0]
+      origin_target: [500, -500]
       position_offset: [0.0, 0.0]
-      origin_id: [0, 1]
+      origin_id: [0, 0]
       max_position: [0.0, 0.0]
       min_position: [0.0, 0.0]
       speed_kp: [2.0, 2.0]
@@ -59,11 +59,11 @@
       feedback_period_ms: 10
       state_period_ms: 100
       timeout_ms: 255
-      joint_name: ["collector_hand_left", "collector_hand_right"]
+      joint_name: ["collector_hand_right", "collector_hand_left"]
       control_mode: ["position", "position"]
-      ratio: [1.0, 1.0]
+      ratio: [1.0, -1.0]
       origin_get_mode: ["stall","stall"]
-      origin_target: [10, 10]
+      origin_target: [10, -10]
       position_offset: [1.57, 1.57]
       origin_id: [0,0]
       max_position: [0.0, 0.0]

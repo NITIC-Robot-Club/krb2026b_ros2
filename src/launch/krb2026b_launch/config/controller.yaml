@@ -31,20 +31,28 @@
     button_11:
       function: "get_origin"
       mode: "click"
-      joint_name: "collector_hand_left"
+      joint_name: "collector_hand_right"
     button_12:
       function: "get_origin"
       mode: "click"
-      joint_name: "collector_hand_right"
+      joint_name: "collector_hand_left"
+    button_13:
+      function: "get_origin"
+      mode: "click"
+      joint_name: "collector_arm_right"
+    button_14:
+      function: "get_origin"
+      mode: "click"
+      joint_name: "collector_arm_left"
     zl:
       function: "joint_position"
       mode: "hold"
       joint_name: "collector_arm_left"
-      position_on: 2.0
+      position_on: 1.9
       position_off: 0.0
     zr:
       function: "joint_position"
       mode: "hold"
       joint_name: "collector_arm_right"
-      position_on: 2.0
+      position_on: 1.9
       position_off: 0.0
