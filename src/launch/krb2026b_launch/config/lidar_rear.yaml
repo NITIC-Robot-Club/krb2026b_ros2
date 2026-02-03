@@ -4,3 +4,4 @@
     output_topic: "rear"
     frame_id: "lidar_rear"
     hostip: "0.0.0.0"
+    threshold: 0.83

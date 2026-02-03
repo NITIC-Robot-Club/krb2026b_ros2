@@ -1,0 +1,6 @@
+<launch>
+    <arg name="state_timeout_sec" default="3.0"/>
+    <arg name="initial_allow_auto_drive" default="false"/>
+    <arg name="state_graph_path" default="$(find-pkg-share krb2026b_launch)/state_graph/collector_test.md"/>
+    <include file="$(find-pkg-share natto_launch)/launch/components/behavior.launch.xml"/>
+</launch>

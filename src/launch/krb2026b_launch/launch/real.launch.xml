@@ -2,16 +2,12 @@
     <arg name="publish_map" default="true"/>
     <arg name="launch_localization" default="true"/>
     <arg name="use_odom_tf" default="false"/>
+    <arg name="launch_behavior" default="false"/>
     <arg name="line_segments_path" default="$(find-pkg-share krb2026b_launch)/map/line_segments.csv"/>
+    <arg name="launch_simulation" default="false"/>
+    <arg name="initial_allow_auto_drive" default="true"/>
 
-    <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml">
-        <arg name="launch_simulation" value="false"/>
-        <arg name="publish_map" value="$(var publish_map)"/>
-        <arg name="launch_localization" value="$(var launch_localization)"/>
-        <arg name="use_odom_tf" value="$(var use_odom_tf)"/>
-        <arg name="line_segments_path" value="$(var line_segments_path)"/>
-        <arg name="initial_allow_auto_drive" value="true"/>
-    </include>
+    <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml"/>
 
     <node_container pkg="rclcpp_components" exec="component_container" name="cantest_container" namespace="/can">
         <composable_node pkg="natto_canable" plugin="canable::canable" name="canable">
