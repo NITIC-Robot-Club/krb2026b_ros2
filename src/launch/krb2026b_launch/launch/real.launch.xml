@@ -5,6 +5,7 @@
     <arg name="launch_behavior" default="false"/>
     <arg name="line_segments_path" default="$(find-pkg-share krb2026b_launch)/map/line_segments.csv"/>
     <arg name="launch_simulation" default="false"/>
+    <arg name="launch_sensing" default="false"/>
     <arg name="initial_allow_auto_drive" default="true"/>
 
     <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml"/>

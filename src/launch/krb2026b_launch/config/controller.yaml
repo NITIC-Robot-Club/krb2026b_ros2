@@ -28,22 +28,14 @@
       joint_name: "collector_hand_right"
       position_on: 0.0
       position_off: 1.57
-    button_11:
-      function: "get_origin"
-      mode: "click"
-      joint_name: "collector_hand_right"
-    button_12:
-      function: "get_origin"
-      mode: "click"
-      joint_name: "collector_hand_left"
     button_13:
       function: "get_origin"
       mode: "click"
-      joint_name: "collector_arm_left"
+      joint_names: ["collector_arm_left", "collector_hand_left"]
     button_14:
       function: "get_origin"
       mode: "click"
-      joint_name: "collector_arm_right"
+      joint_names: ["collector_arm_right", "collector_hand_right"]
     zl:
       function: "joint_position"
       mode: "hold"
