@@ -7,14 +7,14 @@
           range: [0.01, 1.5]
         then:
           joint_name: "collector_hand_left"
-          range: [1.75, 1.75]
+          range: [1.57, 1.57]
       rule_1:
         if_0:
           joint_name: "collector_arm_right"
           range: [0.01, 1.5]
         then:
           joint_name: "collector_hand_right"
-          range: [1.75, 1.75]
+          range: [1.57, 1.57]
     tolerances:
       collector_arm_left: 0.1
       collector_arm_right: 0.1

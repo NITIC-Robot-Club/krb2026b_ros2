@@ -7,13 +7,16 @@ Panels:
         - /Global Options1
         - /Common1
         - /Localization1
+        - /Localization1/WheelOdometry1
+        - /Localization1/MCL1
         - /Control1
-        - /Swerve1
         - /Planning1
         - /Sensing1
+        - /Sensing1/Raw1/LaserScan1
+        - /Sensing1/Raw1/PointCloud21
         - /Simulation1
-      Splitter Ratio: 0.6202898621559143
-    Tree Height: 527
+      Splitter Ratio: 0.5660848021507263
+    Tree Height: 817
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -25,9 +28,8 @@ Panels:
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
-      - /Current View1/Focal Point1
     Name: Views
-    Splitter Ratio: 0.6938369870185852
+    Splitter Ratio: 0.5725646018981934
   - Class: rviz_common/Time
     Experimental: false
     Name: Time
@@ -63,27 +65,95 @@ Visualization Manager:
             All Enabled: true
             base_link:
               Value: true
+            command/base_link:
+              Value: true
+            command/lidar_front:
+              Value: true
+            command/lidar_rear:
+              Value: true
+            command/swerve_wheel_0_link:
+              Value: true
+            command/swerve_wheel_1_link:
+              Value: true
+            command/swerve_wheel_2_link:
+              Value: true
+            command/swerve_wheel_3_link:
+              Value: true
+            command/swerve_wheel_base_0_link:
+              Value: true
+            command/swerve_wheel_base_1_link:
+              Value: true
+            command/swerve_wheel_base_2_link:
+              Value: true
+            command/swerve_wheel_base_3_link:
+              Value: true
             lidar_front:
               Value: true
             lidar_rear:
               Value: true
             map:
               Value: true
-            odom:
+            simulation:
               Value: true
-          Marker Scale: 1
+            swerve_wheel_0_link:
+              Value: true
+            swerve_wheel_1_link:
+              Value: true
+            swerve_wheel_2_link:
+              Value: true
+            swerve_wheel_3_link:
+              Value: true
+            swerve_wheel_base_0_link:
+              Value: true
+            swerve_wheel_base_1_link:
+              Value: true
+            swerve_wheel_base_2_link:
+              Value: true
+            swerve_wheel_base_3_link:
+              Value: true
+          Marker Scale: 0.75
           Name: TF
-          Show Arrows: true
+          Show Arrows: false
           Show Axes: true
           Show Names: false
           Tree:
             map:
-              odom:
-                base_link:
-                  lidar_front:
+              base_link:
+                command/base_link:
+                  command/lidar_front:
                     {}
-                  lidar_rear:
+                  command/lidar_rear:
                     {}
+                  command/swerve_wheel_base_0_link:
+                    command/swerve_wheel_0_link:
+                      {}
+                  command/swerve_wheel_base_1_link:
+                    command/swerve_wheel_1_link:
+                      {}
+                  command/swerve_wheel_base_2_link:
+                    command/swerve_wheel_2_link:
+                      {}
+                  command/swerve_wheel_base_3_link:
+                    command/swerve_wheel_3_link:
+                      {}
+                lidar_front:
+                  {}
+                lidar_rear:
+                  {}
+                swerve_wheel_base_0_link:
+                  swerve_wheel_0_link:
+                    {}
+                swerve_wheel_base_1_link:
+                  swerve_wheel_1_link:
+                    {}
+                swerve_wheel_base_2_link:
+                  swerve_wheel_2_link:
+                    {}
+                swerve_wheel_base_3_link:
+                  swerve_wheel_3_link:
+                    {}
+              simulation:
+                {}
           Update Interval: 0
           Value: true
         - Class: rviz_default_plugins/MarkerArray
@@ -110,13 +180,13 @@ Visualization Manager:
             Filter size: 1
             History Policy: Keep Last
             Reliability Policy: Reliable
-            Value: /occupancy_grid
+            Value: /common/occupancy_grid
           Update Topic:
             Depth: 5
             Durability Policy: Volatile
             History Policy: Keep Last
             Reliability Policy: Reliable
-            Value: /occupancy_grid_updates
+            Value: /common/occupancy_grid_updates
           Use Timestamp: false
           Value: true
         - Alpha: 1
@@ -130,8 +200,108 @@ Visualization Manager:
             Filter size: 10
             History Policy: Keep Last
             Reliability Policy: Reliable
-            Value: /robot/footprint
+            Value: /common/footprint
           Value: true
+        - Alpha: 1
+          Class: rviz_default_plugins/RobotModel
+          Collision Enabled: false
+          Description File: ""
+          Description Source: Topic
+          Description Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /robot_description
+          Enabled: true
+          Links:
+            All Links Enabled: true
+            Expand Joint Details: false
+            Expand Link Details: false
+            Expand Tree: false
+            Link Tree Style: Links in Alphabetic Order
+            base_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            lidar_front:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            lidar_rear:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_0_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_1_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_2_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_3_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_base_0_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_base_1_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_base_2_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_base_3_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+          Mass Properties:
+            Inertia: false
+            Mass: false
+          Name: JointState
+          TF Prefix: ""
+          Update Interval: 0
+          Value: true
+          Visual Enabled: true
+        - Alpha: 0.5
+          Class: rviz_default_plugins/RobotModel
+          Collision Enabled: false
+          Description File: ""
+          Description Source: Topic
+          Description Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /robot_description
+          Enabled: false
+          Links:
+            All Links Enabled: true
+            Expand Joint Details: false
+            Expand Link Details: false
+            Expand Tree: false
+            Link Tree Style: Links in Alphabetic Order
+          Mass Properties:
+            Inertia: false
+            Mass: false
+          Name: CommandJointState
+          TF Prefix: command
+          Update Interval: 0
+          Value: false
+          Visual Enabled: true
       Enabled: true
       Name: Common
     - Class: rviz_common/Group
@@ -163,7 +333,7 @@ Visualization Manager:
               Angular Color: 204; 204; 51
               Arrow Width: 0.5
               Class: rviz_default_plugins/TwistStamped
-              Enabled: true
+              Enabled: false
               Hide Small Values: true
               History Length: 1
               Linear Arrow Scale: 2
@@ -175,14 +345,14 @@ Visualization Manager:
                 Filter size: 10
                 History Policy: Keep Last
                 Reliability Policy: Reliable
-                Value: /localization/swerve_odometry/twist
-              Value: true
+                Value: /localization/wheel_odometry/twist
+              Value: false
             - Alpha: 1
               Axes Length: 1
               Axes Radius: 0.10000000149011612
               Class: rviz_default_plugins/Pose
               Color: 255; 25; 0
-              Enabled: true
+              Enabled: false
               Head Length: 0.30000001192092896
               Head Radius: 0.10000000149011612
               Name: Pose
@@ -195,9 +365,48 @@ Visualization Manager:
                 Filter size: 10
                 History Policy: Keep Last
                 Reliability Policy: Reliable
-                Value: /localization/swerve_odometry/pose
-              Value: true
-          Enabled: false
+                Value: /localization/wheel_odometry/pose
+              Value: false
+            - Angle Tolerance: 0.10000000149011612
+              Class: rviz_default_plugins/Odometry
+              Covariance:
+                Orientation:
+                  Alpha: 0.5
+                  Color: 255; 255; 127
+                  Color Style: Unique
+                  Frame: Local
+                  Offset: 1
+                  Scale: 1
+                  Value: true
+                Position:
+                  Alpha: 0.30000001192092896
+                  Color: 204; 51; 204
+                  Scale: 1
+                  Value: true
+                Value: true
+              Enabled: false
+              Keep: 100
+              Name: Odometry
+              Position Tolerance: 0.10000000149011612
+              Shape:
+                Alpha: 1
+                Axes Length: 1
+                Axes Radius: 0.10000000149011612
+                Color: 255; 25; 0
+                Head Length: 0.30000001192092896
+                Head Radius: 0.10000000149011612
+                Shaft Length: 1
+                Shaft Radius: 0.05000000074505806
+                Value: Arrow
+              Topic:
+                Depth: 5
+                Durability Policy: Volatile
+                Filter size: 10
+                History Policy: Keep Last
+                Reliability Policy: Best Effort
+                Value: /localization/wheel_odometry/odometry
+              Value: false
+          Enabled: true
           Name: WheelOdometry
         - Class: rviz_common/Group
           Displays:
@@ -222,6 +431,62 @@ Visualization Manager:
                 Reliability Policy: Reliable
                 Value: /localization/mcl/particles
               Value: true
+            - Alpha: 1
+              Arrow Length: 0.30000001192092896
+              Axes Length: 0.30000001192092896
+              Axes Radius: 0.009999999776482582
+              Class: rviz_default_plugins/PoseArray
+              Color: 0; 0; 255
+              Enabled: true
+              Head Length: 0.07000000029802322
+              Head Radius: 0.029999999329447746
+              Name: Trajectory
+              Shaft Length: 0.23000000417232513
+              Shaft Radius: 0.009999999776482582
+              Shape: Arrow (3D)
+              Topic:
+                Depth: 5
+                Durability Policy: Volatile
+                Filter size: 10
+                History Policy: Keep Last
+                Reliability Policy: Reliable
+                Value: /localization/mcl/trajectory
+              Value: true
+            - Alpha: 1
+              Axes Length: 1
+              Axes Radius: 0.10000000149011612
+              Class: rviz_default_plugins/PoseWithCovariance
+              Color: 255; 25; 0
+              Covariance:
+                Orientation:
+                  Alpha: 0.5
+                  Color: 255; 255; 127
+                  Color Style: Unique
+                  Frame: Local
+                  Offset: 1
+                  Scale: 1
+                  Value: true
+                Position:
+                  Alpha: 0.30000001192092896
+                  Color: 204; 51; 204
+                  Scale: 1
+                  Value: true
+                Value: true
+              Enabled: false
+              Head Length: 0.30000001192092896
+              Head Radius: 0.10000000149011612
+              Name: PoseWithCovariance
+              Shaft Length: 1
+              Shaft Radius: 0.05000000074505806
+              Shape: Arrow
+              Topic:
+                Depth: 5
+                Durability Policy: Volatile
+                Filter size: 10
+                History Policy: Keep Last
+                Reliability Policy: Reliable
+                Value: /localization/mcl/pose_with_covariance
+              Value: false
           Enabled: true
           Name: MCL
       Enabled: true
@@ -233,7 +498,7 @@ Visualization Manager:
           Angular Color: 204; 204; 51
           Arrow Width: 1
           Class: rviz_default_plugins/TwistStamped
-          Enabled: false
+          Enabled: true
           Hide Small Values: false
           History Length: 1
           Linear Arrow Scale: 1
@@ -246,7 +511,7 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /control/command_velocity
-          Value: false
+          Value: true
         - Alpha: 1
           Axes Length: 1
           Axes Radius: 0.10000000149011612
@@ -271,43 +536,15 @@ Visualization Manager:
       Name: Control
     - Class: rviz_common/Group
       Displays:
-        - Class: rviz_default_plugins/MarkerArray
-          Enabled: false
-          Name: Command
-          Namespaces:
-            {}
-          Topic:
-            Depth: 5
-            Durability Policy: Volatile
-            History Policy: Keep Last
-            Reliability Policy: Reliable
-            Value: /visualization/swerve/command
-          Value: false
-        - Class: rviz_default_plugins/MarkerArray
-          Enabled: true
-          Name: Result
-          Namespaces:
-            swerve_wheel: true
-          Topic:
-            Depth: 5
-            Durability Policy: Volatile
-            History Policy: Keep Last
-            Reliability Policy: Reliable
-            Value: /visualization/swerve/result
-          Value: true
-      Enabled: true
-      Name: Swerve
-    - Class: rviz_common/Group
-      Displays:
         - Alpha: 0.699999988079071
           Class: rviz_default_plugins/Map
           Color Scheme: costmap
-          Draw Behind: true
-          Enabled: true
+          Draw Behind: false
+          Enabled: false
           Name: CostMap
           Topic:
             Depth: 5
-            Durability Policy: Volatile
+            Durability Policy: Transient Local
             Filter size: 10
             History Policy: Keep Last
             Reliability Policy: Reliable
@@ -319,7 +556,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /planning/costmap_updates
           Use Timestamp: false
-          Value: true
+          Value: false
         - Alpha: 1
           Buffer Length: 1
           Class: rviz_default_plugins/Path
@@ -385,8 +622,8 @@ Visualization Manager:
                     Durability Policy: Volatile
                     Filter size: 10
                     History Policy: Keep Last
-                    Reliability Policy: Reliable
-                    Value: /sensing/lidar/laser_scan/front
+                    Reliability Policy: Best Effort
+                    Value: /sensing/lidar/laserscan/front
                   Use Fixed Frame: true
                   Use rainbow: false
                   Value: true
@@ -419,12 +656,12 @@ Visualization Manager:
                     Durability Policy: Volatile
                     Filter size: 10
                     History Policy: Keep Last
-                    Reliability Policy: Reliable
-                    Value: /sensing/lidar/laser_scan/rear
+                    Reliability Policy: Best Effort
+                    Value: /sensing/lidar/laserscan/rear
                   Use Fixed Frame: true
                   Use rainbow: false
                   Value: true
-              Enabled: true
+              Enabled: false
               Name: LaserScan
             - Class: rviz_common/Group
               Displays:
@@ -457,7 +694,7 @@ Visualization Manager:
                     Durability Policy: Volatile
                     Filter size: 10
                     History Policy: Keep Last
-                    Reliability Policy: Reliable
+                    Reliability Policy: Best Effort
                     Value: /sensing/lidar/pointcloud2/front
                   Use Fixed Frame: true
                   Use rainbow: true
@@ -491,7 +728,7 @@ Visualization Manager:
                     Durability Policy: Volatile
                     Filter size: 10
                     History Policy: Keep Last
-                    Reliability Policy: Reliable
+                    Reliability Policy: Best Effort
                     Value: /sensing/lidar/pointcloud2/rear
                   Use Fixed Frame: true
                   Use rainbow: true
@@ -525,11 +762,11 @@ Visualization Manager:
           Size (m): 0.009999999776482582
           Style: Points
           Topic:
-            Depth: 5
+            Depth: 1
             Durability Policy: Volatile
             Filter size: 10
             History Policy: Keep Last
-            Reliability Policy: Reliable
+            Reliability Policy: Best Effort
             Value: /sensing/lidar/pointcloud2/merged
           Use Fixed Frame: true
           Use rainbow: true
@@ -588,7 +825,7 @@ Visualization Manager:
           Axes Radius: 0.10000000149011612
           Class: rviz_default_plugins/Pose
           Color: 255; 25; 0
-          Enabled: true
+          Enabled: false
           Head Length: 0.30000001192092896
           Head Radius: 0.10000000149011612
           Name: Pose
@@ -602,14 +839,14 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /simulation/pose
-          Value: true
-      Enabled: false
+          Value: false
+      Enabled: true
       Name: Simulation
   Enabled: true
   Global Options:
     Background Color: 60; 60; 60
     Fixed Frame: map
-    Frame Rate: 60
+    Frame Rate: 30
   Name: root
   Tools:
     - Class: rviz_default_plugins/Interact
@@ -651,33 +888,33 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 8.51200008392334
+      Distance: 5
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 3.407026529312134
-        Y: 1.8487743139266968
-        Z: 0.0034070289693772793
+        X: 0
+        Y: 0
+        Z: 0
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5697963237762451
-      Target Frame: <Fixed Frame>
-      Value: Orbit (rviz)
-      Yaw: 3.141592502593994
+      Pitch: 1
+      Target Frame: base_link
+      Value: Orbit (rviz_default_plugins)
+      Yaw: 3.1415927410125732
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 831
+  Height: 1121
   Hide Left Dock: false
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000004000000000000015b0000029dfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005d00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003f0000029d000000cc00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c0000026100000001000001f9000003bffc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003f000003bf000000a900fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000034e0000003efc0100000002fb0000000800540069006d006501000000000000034e000002ed00fffffffb0000000800540069006d00650100000000000004500000000000000000000001ed0000029d00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000027a000003bffc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005d00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003f000003bf000000cc00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c0000026100000001000001f9000003bffc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003f000003bf000000a900fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007800000003efc0100000002fb0000000800540069006d0065010000000000000780000002ed00fffffffb0000000800540069006d0065010000000000000450000000000000000000000500000003bf00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -686,6 +923,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 846
-  X: 537
-  Y: 99
+  Width: 1920
+  X: 0
+  Y: 0
