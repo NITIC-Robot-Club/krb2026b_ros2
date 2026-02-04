@@ -1,6 +1,6 @@
 /**:
   ros__parameters:
-    joint_state_rule:
+    rules:
       rule_0:
         if_0:
           joint_name: "collector_arm_left"
@@ -15,4 +15,8 @@
         then:
           joint_name: "collector_hand_right"
           range: [1.75, 1.75]
-          
+    tolerances:
+      collector_arm_left: 0.1
+      collector_arm_right: 0.1
+      collector_hand_left: 0.1
+      collector_hand_right: 0.1
