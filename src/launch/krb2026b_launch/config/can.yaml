@@ -53,6 +53,11 @@
       stop_time_threshold_ms: [100, 100]
       use_position_limit: [false, false]
 
+      vesc_num: 1
+      vesc.joint_name: ["belt_launcher"]
+      vesc.bus_id: [1]
+      vesc.id: [19]
+
     nidec_num: 1
     nidec_0:
       motor_num: 2
@@ -71,7 +76,7 @@
       max_speed: [100, 100]
       position_kp: [2.0, 2.0]
       position_ki: [0.0, 0.0]
-      position_kd: [0.0, 0.0]
+      position_kd: [5.0, 5.0]
       stop_speed_threshold: [60, 60]
       stop_time_threshold_ms: [100, 100]
       use_position_limit: [false, false]
