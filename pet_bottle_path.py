@@ -27,7 +27,7 @@ class BottleDetector(Node):
 
         # ROI (base_link)
         self.declare_parameter(
-            'roi_x', [-1.5, 0.0, 0.0, -1.5]
+            'roi_x', [-1.3, -0.3, -0.3, -1.3]
         )
         self.declare_parameter(
             'roi_y', [-0.5, -0.5, 0.5, 0.5]
@@ -180,7 +180,7 @@ class BottleDetector(Node):
 
                 angle = math.atan2(y2 - y1, x2 - x1)
 
-                if 0.3 < d < 0.5 and dx < 0.07:
+                if 0.3 < d < 0.5 and dx < 0.1:
                     pairs.append((centers[i], centers[j]))
 
         return pairs
@@ -259,6 +259,32 @@ class BottleDetector(Node):
     # ----------------------------
     # Callback
     # ----------------------------
+    def publish_empty_markers(self):
+        xs = self.get_parameter('roi_x').value
+        ys = self.get_parameter('roi_y').value
+        roi = list(zip(xs, ys))
+        ma = MarkerArray()
+        mid = 0
+
+        roi_m = Marker()
+        roi_m.header.frame_id = 'base_link'
+        roi_m.header.stamp = self.get_clock().now().to_msg()
+        roi_m.ns = 'roi'
+        roi_m.id = mid
+        mid += 1
+        roi_m.type = Marker.LINE_STRIP
+        roi_m.scale.x = 0.01
+        roi_m.color.r = roi_m.color.g = 1.0
+        roi_m.color.a = 1.0
+
+        for x, y in roi + [roi[0]]:
+            pt = Point()
+            pt.x = x
+            pt.y = y
+            roi_m.points.append(pt)
+
+        ma.markers.append(roi_m)
+        self.marker_pub.publish(ma)
 
     def scan_cb(self, msg):
         try:
@@ -268,6 +294,7 @@ class BottleDetector(Node):
                 rclpy.time.Time()
             )
         except Exception:
+            self.publish_empty_markers()
             return
 
         xs = self.get_parameter('roi_x').value
@@ -276,6 +303,7 @@ class BottleDetector(Node):
 
         points = self.scan_to_points_base(msg, tf_base, roi)
         if not points:
+            self.publish_empty_markers()
             return
 
         clusters = self.cluster_points(points)
@@ -287,6 +315,7 @@ class BottleDetector(Node):
 
         pairs = self.find_pairs(centers)
         if not pairs:
+            self.publish_empty_markers()
             return
 
         pairs.sort(key=lambda p: abs(self.pair_center(p)[0]))
@@ -321,7 +350,7 @@ class BottleDetector(Node):
         step = self.get_parameter('path_step').value
 
         if abs(ty) > y_thresh or abs(tyaw) > yaw_thresh:
-            gx = target.position.x + 0.4
+            gx = target.position.x + 0.5
         else:
             gx = target.position.x + 0.3
 
@@ -380,11 +409,11 @@ class BottleDetector(Node):
 
                 m.pose.position.x = cx
                 m.pose.position.y = cy
-                m.pose.position.z = 0.15
+                m.pose.position.z = 0.1
                 m.pose.orientation.w = 1.0
 
                 m.scale.x = m.scale.y = 0.064
-                m.scale.z = 0.30
+                m.scale.z = 0.20
 
                 m.color.b = 1.0
                 m.color.a = 0.8
