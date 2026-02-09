@@ -386,20 +386,118 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /robot_description
-          Enabled: false
+          Enabled: true
           Links:
             All Links Enabled: true
             Expand Joint Details: false
             Expand Link Details: false
             Expand Tree: false
             Link Tree Style: Links in Alphabetic Order
+            base_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            belt_launcher_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            collector_arm_left_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            collector_arm_right_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            collector_hand_left_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            collector_hand_right_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            lidar_left:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            lidar_rear:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            lidar_right:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_0_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_1_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_2_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_3_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_base_0_as5600_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_base_0_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_base_1_as5600_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_base_1_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_base_2_as5600_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_base_2_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            swerve_wheel_base_3_as5600_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            swerve_wheel_base_3_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
           Mass Properties:
             Inertia: false
             Mass: false
           Name: CommandJointState
           TF Prefix: command
           Update Interval: 0
-          Value: false
+          Value: true
           Visual Enabled: true
       Enabled: true
       Name: Common
@@ -411,11 +509,11 @@ Visualization Manager:
           Class: rviz_default_plugins/Pose
           Color: 255; 25; 0
           Enabled: true
-          Head Length: 0.30000001192092896
-          Head Radius: 0.10000000149011612
+          Head Length: 0.10000000149011612
+          Head Radius: 0.05000000074505806
           Name: CurrentPose
-          Shaft Length: 1
-          Shaft Radius: 0.05000000074505806
+          Shaft Length: 0.25
+          Shaft Radius: 0.019999999552965164
           Shape: Arrow
           Topic:
             Depth: 5
@@ -432,7 +530,7 @@ Visualization Manager:
               Angular Color: 204; 204; 51
               Arrow Width: 0.5
               Class: rviz_default_plugins/TwistStamped
-              Enabled: false
+              Enabled: true
               Hide Small Values: true
               History Length: 1
               Linear Arrow Scale: 2
@@ -445,7 +543,7 @@ Visualization Manager:
                 History Policy: Keep Last
                 Reliability Policy: Reliable
                 Value: /localization/wheel_odometry/twist
-              Value: false
+              Value: true
             - Alpha: 1
               Axes Length: 1
               Axes Radius: 0.10000000149011612
@@ -515,7 +613,7 @@ Visualization Manager:
               Axes Radius: 0.009999999776482582
               Class: rviz_default_plugins/PoseArray
               Color: 255; 25; 0
-              Enabled: true
+              Enabled: false
               Head Length: 0.07000000029802322
               Head Radius: 0.029999999329447746
               Name: Particle
@@ -529,14 +627,14 @@ Visualization Manager:
                 History Policy: Keep Last
                 Reliability Policy: Reliable
                 Value: /localization/mcl/particles
-              Value: true
+              Value: false
             - Alpha: 1
               Arrow Length: 0.30000001192092896
               Axes Length: 0.30000001192092896
               Axes Radius: 0.009999999776482582
               Class: rviz_default_plugins/PoseArray
               Color: 0; 0; 255
-              Enabled: true
+              Enabled: false
               Head Length: 0.07000000029802322
               Head Radius: 0.029999999329447746
               Name: Trajectory
@@ -550,7 +648,7 @@ Visualization Manager:
                 History Policy: Keep Last
                 Reliability Policy: Reliable
                 Value: /localization/mcl/trajectory
-              Value: true
+              Value: false
             - Alpha: 1
               Axes Length: 1
               Axes Radius: 0.10000000149011612
@@ -616,7 +714,7 @@ Visualization Manager:
           Axes Radius: 0.10000000149011612
           Class: rviz_default_plugins/Pose
           Color: 255; 255; 0
-          Enabled: true
+          Enabled: false
           Head Length: 0.30000001192092896
           Head Radius: 0.10000000149011612
           Name: Lookahead
@@ -630,7 +728,7 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /control/lookahead
-          Value: true
+          Value: false
       Enabled: true
       Name: Control
     - Class: rviz_common/Group
@@ -1086,7 +1184,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.15016508102417
+      Distance: 1.3627722263336182
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
