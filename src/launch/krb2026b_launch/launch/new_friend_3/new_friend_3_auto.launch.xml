@@ -1,9 +1,0 @@
-<launch>
-    <include file="$(find-pkg-share krb2026b_launch)/launch/real.launch.xml">
-        <arg name="launch_localization" value="true"/>
-        <arg name="line_segments_path" value="$(find-pkg-share krb2026b_launch)/map/new_friend_3/line_segments.csv"/>
-        <arg name="circles_path" value=""/>
-        <arg name="use_odom_tf" value="false"/>
-        <arg name="initial_allow_auto_drive" value="false"/>
-    </include>
-</launch>

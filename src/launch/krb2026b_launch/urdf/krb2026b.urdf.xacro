@@ -93,18 +93,26 @@
   <!-- ==================== -->
   <!-- Lidar frames         -->
   <!-- ==================== -->
-  <link name="lidar_front"/>
-  <joint name="base_link_to_lidar_front" type="fixed">
+  <link name="lidar_right"/>
+  <joint name="base_link_to_lidar_right" type="fixed">
     <parent link="base_link"/>
-    <child link="lidar_front"/>
-    <origin xyz="0.2 0 0" rpy="0 0 0"/>
+    <child link="lidar_right"/>
+    <origin xyz="0.0 -0.184 0" rpy="0 0 1.5708"/>
   </joint>
+
+  <link name="lidar_left"/>
+  <joint name="base_link_to_lidar_left" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_left"/>
+    <origin xyz="0.0 0.184 0" rpy="0 0 -1.5708"/>
+  </joint>
+
 
   <link name="lidar_rear"/>
   <joint name="base_link_to_lidar_rear" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_rear"/>
-    <origin xyz="-0.2 0 0" rpy="0 0 3.1415926535"/>
+    <origin xyz="-0.3 -0.07 0.1" rpy="0 0 3.1415926535"/>
   </joint>
 
   <joint name="belt_launcher" type="prismatic">

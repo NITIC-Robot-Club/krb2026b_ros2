@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <launch>
     <node_container pkg="rclcpp_components" exec="component_container" name="sensing_container" namespace="/sensing/lidar">
-        <composable_node pkg="lakibeam1" plugin="lakibeam1::lakibeam1_scan" name="lakibeam_rear" namespace="/sensing/lidar">
-            <remap from="rear" to="/sensing/lidar/laserscan/rear_raw" />
+        <composable_node pkg="lakibeam1" plugin="lakibeam1::lakibeam1_scan" name="lidar_rear_driver" namespace="/sensing/lidar">
+            <remap from="rear" to="/sensing/lidar/laserscan/rear" />
             <param from="$(find-pkg-share krb2026b_launch)/config/lidar_rear.yaml"/>
         </composable_node>
         
         <composable_node pkg="natto_laser_filter" plugin="laser_filter::laser_filter" name="laserscan_filter_rear" namespace="/sensing/lidar">
-            <remap from="input" to="/sensing/lidar/laserscan/rear_raw"/>
+            <remap from="input" to="/sensing/lidar/laserscan/rear"/>
             <remap from="output" to="/sensing/lidar/laserscan/rear_filtered"/>
             <param from="$(find-pkg-share krb2026b_launch)/config/lidar_rear.yaml"/>
         </composable_node>
