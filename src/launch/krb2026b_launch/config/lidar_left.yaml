@@ -16,3 +16,5 @@
     angle_max : 3.14
     skip : 0
     cluster : 1
+    publish_pointcloud2 : false
+    reverse : true

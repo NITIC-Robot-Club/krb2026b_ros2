@@ -40,11 +40,11 @@
       function: "joint_position"
       mode: "hold"
       joint_name: "collector_arm_left"
-      position_on: 1.8
+      position_on: 1.7
       position_off: 0.0
     zr:
       function: "joint_position"
       mode: "hold"
       joint_name: "collector_arm_right"
-      position_on: 1.8
+      position_on: 1.7
       position_off: 0.0

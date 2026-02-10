@@ -1,6 +1,6 @@
 /**:
   ros__parameters:
-    ip_address: '192.168.10.10'
+    ip_address: '192.168.10.12'
     ip_port: 10940
     frame_id : 'lidar_right'
     calibrate_time : false
@@ -16,3 +16,5 @@
     angle_max : 3.14
     skip : 0
     cluster : 1
+    publish_pointcloud2 : false
+    reverse : true
