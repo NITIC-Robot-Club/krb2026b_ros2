@@ -27,15 +27,15 @@ class BottleDetector(Node):
 
         # ROI (base_link)
         self.declare_parameter(
-            'roi_x', [-1.3, -0.3, -0.3, -1.3]
+            'roi_x', [-1.3, -0.2, -0.2, -1.3]
         )
         self.declare_parameter(
             'roi_y', [-0.5, -0.5, 0.5, 0.5]
         )
 
         # Path parameters
-        self.declare_parameter('y_thresh', 0.05)
-        self.declare_parameter('yaw_thresh_deg', 5.0)
+        self.declare_parameter('y_thresh', 0.01)
+        self.declare_parameter('yaw_thresh_deg', 3.0)
         self.declare_parameter('path_step', 0.05)
 
         self.sub = self.create_subscription(
@@ -340,6 +340,7 @@ class BottleDetector(Node):
 
         # -------- Path --------
         target = pa.poses[0]
+        tx = target.position.x
         ty = target.position.y
         tyaw = self.quat_to_yaw(target.orientation)
 
@@ -350,11 +351,14 @@ class BottleDetector(Node):
         step = self.get_parameter('path_step').value
 
         if abs(ty) > y_thresh or abs(tyaw) > yaw_thresh:
-            gx = target.position.x + 0.5
+            offset = 0.5
         else:
-            gx = target.position.x + 0.3
+            offset = 0.3
 
-        path_base = self.generate_path_base(gx, ty, tyaw, step)
+        gx = tx + offset * math.cos(tyaw)
+        gy = ty + offset * math.sin(tyaw)
+
+        path_base = self.generate_path_base(gx, gy, tyaw, step)
 
         try:
             tf_map = self.tf_buffer.lookup_transform(

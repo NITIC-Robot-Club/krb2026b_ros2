@@ -9,7 +9,7 @@
                    "belt_launcher", "collector_arm_left", "collector_arm_right", "collector_hand_left", "collector_hand_right"]
     control_modes : ["speed", "speed", "speed", "speed",
                      "position", "position", "position", "position",
-                     "position", "position", "position", "position", "position"]
+                     "speed", "position", "position", "position", "position"]
     initial_positions : [0.0, 0.0, 0.0, 0.0,
                          0.0, 0.0, 0.0, 0.0,
                          0.0, 0.0, 0.0, 0.0, 0.0]
@@ -21,4 +21,4 @@
                           0.1, 0.1, 0.1, 0.1, 0.1]
     joint_velocity_max : [60.0, 60.0, 60.0, 60.0,
                           10.0, 10.0, 10.0, 10.0,
-                          10.0, 10.0, 10.0, 10.0, 10.0]
+                          5000.0, 10.0, 10.0, 10.0, 10.0]
