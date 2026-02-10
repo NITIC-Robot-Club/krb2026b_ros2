@@ -27,14 +27,14 @@ class BottleDetector(Node):
 
         # ROI (base_link)
         self.declare_parameter(
-            'roi_x', [-1.3, -0.2, -0.2, -1.3]
+            'roi_x', [-0.8, -0.3, -0.3, -0.8]
         )
         self.declare_parameter(
-            'roi_y', [-0.5, -0.5, 0.5, 0.5]
+            'roi_y', [-0.3, -0.3, 0.3, 0.3]
         )
 
         # Path parameters
-        self.declare_parameter('y_thresh', 0.01)
+        self.declare_parameter('y_thresh', 0.02)
         self.declare_parameter('yaw_thresh_deg', 3.0)
         self.declare_parameter('path_step', 0.05)
 
@@ -351,9 +351,11 @@ class BottleDetector(Node):
         step = self.get_parameter('path_step').value
 
         if abs(ty) > y_thresh or abs(tyaw) > yaw_thresh:
-            offset = 0.5
+            offset = 0.435
+            self.get_logger().info(f'Using large offset for path goal. ty={ty:.3f}, tyaw={math.degrees(tyaw):.1f} deg')
         else:
-            offset = 0.3
+            offset = 0.335
+            self.get_logger().info(f'Using normal offset for path goal. tx={ty:.3f}')
 
         gx = tx + offset * math.cos(tyaw)
         gy = ty + offset * math.sin(tyaw)
