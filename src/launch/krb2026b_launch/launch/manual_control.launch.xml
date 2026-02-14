@@ -1,0 +1,13 @@
+<launch>
+    <arg name="control_param_path" default="$(find-pkg-share krb2026b_launch)/param/control.yaml"/>
+
+    <node_container pkg="rclcpp_components" exec="component_container" name="auto_control_container" namespace="control">
+        <!-- 経路追従 -->
+        <composable_node pkg="natto_holonomic_pure_pursuit" plugin="holonomic_pure_pursuit::holonomic_pure_pursuit" name="holonomic_pure_pursuit" namespace="/control">
+            <param from="$(var control_param_path)"/>
+            <remap from="current_pose" to="/localization/current_pose"/>
+            <remap from="path" to="/planning/path"/>
+            <remap from="command_velocity" to="/control/command_velocity"/>
+        </composable_node>
+    </node_container>
+</launch>

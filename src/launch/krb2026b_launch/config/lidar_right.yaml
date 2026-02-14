@@ -1,6 +1,6 @@
 /**:
   ros__parameters:
-    ip_address: '192.168.10.12'
+    ip_address: '192.168.12.12'
     ip_port: 10940
     frame_id : 'lidar_right'
     calibrate_time : false

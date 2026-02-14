@@ -40,7 +40,7 @@ class BottleDetector(Node):
 
         self.sub = self.create_subscription(
             LaserScan,
-            '/sensing/lidar/laserscan/rear',
+            '/sensing/lidar/laserscan/rear_raw',
             self.scan_cb,
             qos_profile_sensor_data
         )
@@ -127,7 +127,7 @@ class BottleDetector(Node):
 
         return points
 
-    def cluster_points(self, points, dist_thresh=0.06, min_pts=3):
+    def cluster_points(self, points, dist_thresh=0.1, min_pts=3):
         clusters = []
         current = []
 

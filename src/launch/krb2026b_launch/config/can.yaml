@@ -110,5 +110,5 @@
       period_ms: 10
       joint_name: "swerve_wheel_base_3_as5600"
       as5600:
-        zero_position: -2.8451944901923447 # 0.489   * -1.0 - math.pi / 4 * 3
+        zero_position: -5.157194490192345 # 2.801   * -1.0 - math.pi / 4 * 3
         ratio: -1.0

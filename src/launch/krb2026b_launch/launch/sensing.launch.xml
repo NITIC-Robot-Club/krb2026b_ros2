@@ -15,9 +15,9 @@
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
 
-        <composable_node pkg="natto_lidar_converter" plugin="pointcloud2_merger::pointcloud2_merger" name="converter_rear" namespace="/sensing/lidar">
-            <remap from="input" to="/sensing/lidar/laserscan/rear"/>
-            <remap from="output" to="/sensing/lidar/pointcloud2/rear"/>
+        <composable_node pkg="natto_lidar_converter" plugin="laserscan_to_pointcloud2::laserscan_to_pointcloud2" name="converter_rear" namespace="/sensing/lidar">
+            <remap from="laserscan" to="/sensing/lidar/laserscan/rear"/>
+            <remap from="pointcloud2" to="/sensing/lidar/pointcloud2/rear"/>
             <param from="$(find-pkg-share krb2026b_launch)/config/lidar_rear.yaml"/>
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
@@ -36,9 +36,9 @@
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
 
-        <composable_node pkg="natto_lidar_converter" plugin="pointcloud2_merger::pointcloud2_merger" name="converter_right" namespace="/sensing/lidar">
-            <remap from="input" to="/sensing/lidar/laserscan/right"/>
-            <remap from="output" to="/sensing/lidar/pointcloud2/right"/>
+        <composable_node pkg="natto_lidar_converter" plugin="laserscan_to_pointcloud2::laserscan_to_pointcloud2" name="converter_right" namespace="/sensing/lidar">
+            <remap from="laserscan" to="/sensing/lidar/laserscan/right"/>
+            <remap from="pointcloud2" to="/sensing/lidar/pointcloud2/right"/>
             <param from="$(find-pkg-share krb2026b_launch)/config/lidar_right.yaml"/>
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
@@ -57,9 +57,9 @@
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
 
-        <composable_node pkg="natto_lidar_converter" plugin="pointcloud2_merger::pointcloud2_merger" name="converter_left" namespace="/sensing/lidar">
-            <remap from="input" to="/sensing/lidar/laserscan/left"/>
-            <remap from="output" to="/sensing/lidar/pointcloud2/left"/>
+        <composable_node pkg="natto_lidar_converter" plugin="laserscan_to_pointcloud2::laserscan_to_pointcloud2" name="converter_left" namespace="/sensing/lidar">
+            <remap from="laserscan" to="/sensing/lidar/laserscan/left"/>
+            <remap from="pointcloud2" to="/sensing/lidar/pointcloud2/left"/>
             <param from="$(find-pkg-share krb2026b_launch)/config/lidar_left.yaml"/>
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
@@ -67,7 +67,7 @@
         <!-- merger -->
         <composable_node pkg="natto_lidar_merger" plugin="pointcloud2_merger::pointcloud2_merger" name="pointcloud_merger" namespace="/sensing/lidar">
             <param name="frame_id" value="base_link"/>
-            <param name="input_topics" value="['/sensing/lidar/pointcloud2/rear', '/sensing/lidar/pointcloud2/right', '/sensing/lidar/pointcloud2/left']"/>
+            <param name="lidar_topics" value="['/sensing/lidar/pointcloud2/right', '/sensing/lidar/pointcloud2/left', '/sensing/lidar/pointcloud2/rear']"/>
             <param name="frequency" value="40.0"/>
             <remap from="merged_pointcloud2" to="/sensing/lidar/pointcloud2/merged"/>
             <remap from="footprint" to="/common/footprint"/>
