@@ -18,3 +18,4 @@
     cluster : 1
     publish_pointcloud2 : false
     reverse : true
+    threshold: 0.9

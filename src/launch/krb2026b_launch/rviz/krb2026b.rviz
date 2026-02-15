@@ -80,16 +80,6 @@ Visualization Manager:
               Value: true
             command/base_link:
               Value: true
-            command/belt_launcher_link:
-              Value: true
-            command/collector_arm_left_link:
-              Value: true
-            command/collector_arm_right_link:
-              Value: true
-            command/collector_hand_left_link:
-              Value: true
-            command/collector_hand_right_link:
-              Value: true
             command/lidar_left:
               Value: true
             command/lidar_rear:
@@ -120,8 +110,6 @@ Visualization Manager:
               Value: true
             map:
               Value: true
-            simulation:
-              Value: true
             swerve_wheel_0_link:
               Value: true
             swerve_wheel_1_link:
@@ -130,11 +118,19 @@ Visualization Manager:
               Value: true
             swerve_wheel_3_link:
               Value: true
+            swerve_wheel_base_0_as5600_link:
+              Value: true
             swerve_wheel_base_0_link:
+              Value: true
+            swerve_wheel_base_1_as5600_link:
               Value: true
             swerve_wheel_base_1_link:
               Value: true
+            swerve_wheel_base_2_as5600_link:
+              Value: true
             swerve_wheel_base_2_link:
+              Value: true
+            swerve_wheel_base_3_as5600_link:
               Value: true
             swerve_wheel_base_3_link:
               Value: true
@@ -146,23 +142,7 @@ Visualization Manager:
           Tree:
             map:
               base_link:
-                belt_launcher_link:
-                  {}
-                collector_arm_left_link:
-                  collector_hand_left_link:
-                    {}
-                collector_arm_right_link:
-                  collector_hand_right_link:
-                    {}
                 command/base_link:
-                  command/belt_launcher_link:
-                    {}
-                  command/collector_arm_left_link:
-                    command/collector_hand_left_link:
-                      {}
-                  command/collector_arm_right_link:
-                    command/collector_hand_right_link:
-                      {}
                   command/lidar_left:
                     {}
                   command/lidar_rear:
@@ -187,20 +167,6 @@ Visualization Manager:
                   {}
                 lidar_right:
                   {}
-                swerve_wheel_base_0_link:
-                  swerve_wheel_0_link:
-                    {}
-                swerve_wheel_base_1_link:
-                  swerve_wheel_1_link:
-                    {}
-                swerve_wheel_base_2_link:
-                  swerve_wheel_2_link:
-                    {}
-                swerve_wheel_base_3_link:
-                  swerve_wheel_3_link:
-                    {}
-              simulation:
-                {}
           Update Interval: 0
           Value: true
         - Class: rviz_default_plugins/MarkerArray
@@ -549,7 +515,7 @@ Visualization Manager:
               Axes Radius: 0.10000000149011612
               Class: rviz_default_plugins/Pose
               Color: 255; 25; 0
-              Enabled: false
+              Enabled: true
               Head Length: 0.30000001192092896
               Head Radius: 0.10000000149011612
               Name: Pose
@@ -563,7 +529,7 @@ Visualization Manager:
                 History Policy: Keep Last
                 Reliability Policy: Reliable
                 Value: /localization/wheel_odometry/pose
-              Value: false
+              Value: true
             - Angle Tolerance: 0.10000000149011612
               Class: rviz_default_plugins/Odometry
               Covariance:
@@ -613,7 +579,7 @@ Visualization Manager:
               Axes Radius: 0.009999999776482582
               Class: rviz_default_plugins/PoseArray
               Color: 255; 25; 0
-              Enabled: false
+              Enabled: true
               Head Length: 0.07000000029802322
               Head Radius: 0.029999999329447746
               Name: Particle
@@ -627,7 +593,7 @@ Visualization Manager:
                 History Policy: Keep Last
                 Reliability Policy: Reliable
                 Value: /localization/mcl/particles
-              Value: false
+              Value: true
             - Alpha: 1
               Arrow Length: 0.30000001192092896
               Axes Length: 0.30000001192092896
@@ -1184,7 +1150,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 1.3627722263336182
+      Distance: 4.977178573608398
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
