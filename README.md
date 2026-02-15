@@ -59,20 +59,16 @@ ros2 bag play rosbag名
 センシングも動くので、laserscanさえあればOK
 
 ## 編集
-特定のタイミングだけ切り出したいときは以下のようなyamlを作成する
 
-```yaml
-output_bags:
-  - uri: 変換後rosbag名
-    storage_id: mcap
-    all_topics: true
-    record_options:
-      start_offset: 開始オフセット
-      duration: データの長さ
-```
-
-作成したyamlともととなるrosbagをconvertする
+### rosbagの一部を切り出したいとき
 
 ```bash
-ros2 bag convert -i 元のrosbag -o yamlファイル
+python3 krb2026b_ros2/script/rosbag_cutter.py rosbag名
 ```
+でカットできる
+
+start offsetは開始時間
+
+durationは開始時間から記録する時間
+
+start offset + dutation = end time
