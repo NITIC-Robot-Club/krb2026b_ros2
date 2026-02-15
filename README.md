@@ -34,11 +34,22 @@ candump can0 | python3 ~/robocon/src/natto_can_ros2/src/natto_can_bridge/include
 
 # rosbag
 
+## mcapコマンドを使用したい場合
+
+https://github.com/foxglove/mcap/releases?q=mcap-cli
+
+ここからバイナリをダウンロードしたら使える
+
+```bash
+sudo chmod +x mcap-linux-amd64
+sudo mv mcap-linux-amd64 /bin/mcap
+```
+
 ## 保存
 
 ### 自己位置推定用データがほしいとき
 ```bash
-ros2 bag record /sensing/lidar/laserscan/left_raw /sensing/lidar/laserscan/rear_raw /sensing/lidar/laserscan/right_raw /joint_states
+ros2 bag record /sensing/lidar/laserscan/left_raw /sensing/lidar/laserscan/rear_raw /sensing/lidar/laserscan/right_raw /joint_states --compression-format zstd --compression-mode file
 ```
 
 センサーの生データと joint_states だけあればできる

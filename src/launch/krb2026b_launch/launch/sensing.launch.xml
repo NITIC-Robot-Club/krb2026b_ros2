@@ -68,7 +68,7 @@
         <composable_node pkg="natto_lidar_merger" plugin="pointcloud2_merger::pointcloud2_merger" name="pointcloud_merger" namespace="/sensing/lidar">
             <param name="frame_id" value="base_link"/>
             <param name="lidar_topics" value="['/sensing/lidar/pointcloud2/right', '/sensing/lidar/pointcloud2/left', '/sensing/lidar/pointcloud2/rear']"/>
-            <param name="frequency" value="40.0"/>
+            <param name="frequency" value="100.0"/>
             <remap from="merged_pointcloud2" to="/sensing/lidar/pointcloud2/merged"/>
             <remap from="footprint" to="/common/footprint"/>
             <extra_arg name="use_intra_process_comms" value="true"/>

@@ -6,7 +6,7 @@
     <arg name="use_ransac" default="true"/>
     <arg name="use_odom_tf" default="false"/>
     <arg name="occupancy_grid_resolution" default="0.02"/>
-    <arg name="merged_lidar_publish_frequency" default="30.0"/>
+    <arg name="merged_lidar_publish_frequency" default="100.0"/>
     <arg name="initial_allow_auto_drive" default="true"/>
     <arg name="controller_max_xy_speed_m_s" default="2.0"/>
     <arg name="controller_max_yaw_speed_rad_s" default="6.0"/>
