@@ -8,6 +8,7 @@ ament_auto_package(
     config
     launch
     rviz
+    speed_path
     state_graph
     map
     param

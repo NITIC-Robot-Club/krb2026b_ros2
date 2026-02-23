@@ -40,7 +40,7 @@ class BottleDetector(Node):
 
         self.sub = self.create_subscription(
             LaserScan,
-            '/sensing/lidar/laserscan/rear_raw',
+            '/sensing/lidar/laserscan/rear',
             self.scan_cb,
             qos_profile_sensor_data
         )
@@ -423,6 +423,8 @@ class BottleDetector(Node):
 
                 m.color.b = 1.0
                 m.color.a = 0.8
+
+                m.lifetime = rclpy.duration.Duration(seconds=0.1).to_msg()
 
                 ma.markers.append(m)
 
