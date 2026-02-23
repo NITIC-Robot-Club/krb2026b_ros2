@@ -46,7 +46,7 @@ class SpeedPathTimeOptimalPlanner:
         self.waypoints = [
             (0.5, 0.5, 0.0),
             (1.0, 3.0, 0.0),
-            (1.5, 0.5, 0.0),
+            (1.5, 0.5, 0.1),
         ]
 
         # =============================
@@ -55,7 +55,7 @@ class SpeedPathTimeOptimalPlanner:
         self.line_segments = []
 
         self.load_line_segments(
-            "../src/launch/krb2026b_launch/map/line_segments.csv"
+            "../map/line_segments.csv"
         )
 
 
@@ -177,7 +177,11 @@ class SpeedPathTimeOptimalPlanner:
         for i, (wx, wy, wyaw) in enumerate(self.waypoints):
             k = wp_idx[i]
             wp_cost += W_POS * ((x[k] - wx)**2 + (y[k] - wy)**2)
-            wp_cost += W_YAW * (yaw[k] - wyaw)**2
+            angle_error = ca.atan2(
+                ca.sin(yaw[k] - wyaw),
+                ca.cos(yaw[k] - wyaw)
+            )
+            wp_cost += W_YAW * angle_error**2
 
         opti.minimize(T + wp_cost + obs_cost)
 

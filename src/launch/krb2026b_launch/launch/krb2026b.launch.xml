@@ -25,6 +25,7 @@
     <arg name="state_graph_path" default=""/>
     <arg name="joint_rule_path" default="$(find-pkg-share krb2026b_launch)/config/joint_rule.yaml"/>
     <arg name="rviz_path" default="$(find-pkg-share krb2026b_launch)/rviz/krb2026b.rviz"/>
+    <arg name="speed_path_directory" default="$(find-pkg-share krb2026b_launch)/speed_path"/>
     <arg name="joint_state_topics" default="['/swerve/command_joint_states', '/controller/joint_states', '/behavior/command_joint_states', '/test/command_joint_states']"/>
 
     <include file="$(find-pkg-share natto_launch)/launch/natto.launch.xml"/>

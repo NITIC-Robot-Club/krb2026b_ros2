@@ -1,7 +1,7 @@
 ```mermaid
 stateDiagram-v2
 [*] --> オブジェクトエリア移動 : wait(duration_sec=2.0)
-オブジェクトエリア移動 --> スタートゾーン0 : set_pose(x = 1.0, y = 3.1, yaw = 90.0)
+オブジェクトエリア移動 --> スタートゾーン0 : load_speed_path(file = start_to_bottle01.csv)
 スタートゾーン0 --> オブジェクト01 : set_pose(x = 1.5, y = 0.5, yaw = 180.0)
 オブジェクト01 --> オブジェクト23 : set_pose(x = 1.7, y = 0.5, yaw = 180.0)
 オブジェクト23 --> オブジェクト45 : set_pose(x = 2.1, y = 0.5, yaw = 180.0)
