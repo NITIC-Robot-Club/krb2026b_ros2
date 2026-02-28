@@ -2,7 +2,7 @@
     <arg name="publish_map" default="true"/>
     <arg name="launch_localization" default="true"/>
     <arg name="use_odom_tf" default="false"/>
-    <arg name="launch_behavior" default="false"/>
+    <arg name="launch_behavior" default="true"/>
     <arg name="line_segments_path" default="$(find-pkg-share krb2026b_launch)/map/line_segments.csv"/>
     <arg name="launch_simulation" default="false"/>
     <arg name="launch_sensing" default="false"/>

@@ -17,7 +17,7 @@
       origin_get_mode: ["as5600", "as5600", "as5600", "as5600", "manual", "manual", "manual", "manual"]
       origin_target: [0, 0, 0, 0, 0, 0, 0, 0]
       position_offset: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-      origin_id: [2, 1, 0, 3, 0, 0, 0, 0] # origin id temp
+      origin_id: [0, 1, 2, 3, 0, 0, 0, 0] # origin id temp
       max_position: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       min_position: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       speed_kp: [2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0]
@@ -64,7 +64,7 @@
       feedback_period_ms: 10
       state_period_ms: 100
       timeout_ms: 255
-      joint_name: ["collector_hand_right", "collector_hand_left"]
+      joint_name: ["collector_hand_left", "collector_hand_right"]
       control_mode: ["position", "position"]
       ratio: [1.0, -1.0]
       origin_get_mode: ["stall","stall"]
@@ -85,30 +85,28 @@
     i2c_0:
       device_type: "as5600"
       period_ms: 10
-      joint_name: "swerve_wheel_base_2_as5600"
+      joint_name: "swerve_wheel_base_0_as5600"
       as5600:
-        # zero_position: 1.7516018366025516  # -2.537   * -1.0 - math.pi / 4 
-        zero_position: 2.8531944901923447
+        zero_position: 1.7486018366025515  # -2.534   * -1.0 - math.pi / 4 
         ratio: -1.0
     i2c_1:
       device_type: "as5600"
       period_ms: 10
       joint_name: "swerve_wheel_base_1_as5600"
       as5600:
-        zero_position: -1.5526018366025518  # 2.338    * -1.0 + math.pi / 4
+        zero_position: -1.5036018366025519  # 2.289 * -1.0 + math.pi / 4
         ratio: -1.0
     i2c_2:
       device_type: "as5600"
       period_ms: 10
-      joint_name: "swerve_wheel_base_0_as5600"
+      joint_name: "swerve_wheel_base_2_as5600"
       as5600:
-        # zero_position: 0.8041944901923448 # 1.552  * -1.0 + math.pi / 4 * 3 
-        zero_position: 1.7246018366025515
+        zero_position: 2.835194490192345 # -0.479  * -1.0 + math.pi / 4 * 3 
         ratio: -1.0
     i2c_3:
       device_type: "as5600"
       period_ms: 10
       joint_name: "swerve_wheel_base_3_as5600"
       as5600:
-        zero_position: -5.157194490192345 # 2.801   * -1.0 - math.pi / 4 * 3
+        zero_position: -5.185194490192345 # 2.829   * -1.0 - math.pi / 4 * 3
         ratio: -1.0
