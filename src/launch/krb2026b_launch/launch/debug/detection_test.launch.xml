@@ -7,6 +7,13 @@
             <param name="model_path" value="$(var model_path)"/>
         </composable_node>
 
+        <!-- RealSense Camera -->
+        <composable_node pkg="realsense2_camera" plugin="realsense2_camera::RealSenseNodeFactory" name="realsense_camera" namespace="/camera">
+            <param name="align_depth.enable" value="true"/>
+            <param name="rgb_camera.color_profile" value="640,480,60"/>
+            <param name="depth_module.depth_profile" value="640,480,60"/>
+        </composable_node>
+        
         <composable_node pkg="tf2_ros" plugin="tf2_ros::StaticTransformBroadcasterNode" name="map_to_camera_link" namespace="/">
             <param name="frame_id" value="map"/>
             <param name="child_frame_id" value="camera_link"/>
