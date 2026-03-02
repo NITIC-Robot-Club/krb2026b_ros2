@@ -14,9 +14,5 @@
             <param name="depth_module.depth_profile" value="640,480,60"/>
         </composable_node>
         
-        <composable_node pkg="tf2_ros" plugin="tf2_ros::StaticTransformBroadcasterNode" name="map_to_camera_link" namespace="/">
-            <param name="frame_id" value="map"/>
-            <param name="child_frame_id" value="camera_link"/>
-        </composable_node>
     </node_container>
 </launch>
