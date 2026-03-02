@@ -14,4 +14,5 @@ ament_auto_package(
     param
     urdf
     meshes
+    model
 )

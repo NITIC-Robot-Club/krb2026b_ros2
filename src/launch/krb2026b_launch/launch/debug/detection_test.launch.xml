@@ -1,0 +1,15 @@
+<launch>
+    <arg name="model_path" default="$(find-pkg-share krb2026b_launch)/model/last_int8_openvino_model/last.xml"/>
+
+    <node_container pkg="rclcpp_components" exec="component_container" name="detection_container" namespace="detection">
+        <!-- 画像認識 -->
+        <composable_node pkg="krb2026b_duck_detection" plugin="duck_detection::duck_detection" name="duck_detection" namespace="/detection">
+            <param name="model_path" value="$(var model_path)"/>
+        </composable_node>
+
+        <composable_node pkg="tf2_ros" plugin="tf2_ros::StaticTransformBroadcasterNode" name="map_to_camera_link" namespace="/">
+            <param name="frame_id" value="map"/>
+            <param name="child_frame_id" value="camera_link"/>
+        </composable_node>
+    </node_container>
+</launch>
