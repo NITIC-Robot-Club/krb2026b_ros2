@@ -12,11 +12,12 @@ duck_detection::duck_detection (const rclcpp::NodeOptions &options) : Node ("duc
 
     image_pub_ = create_publisher<sensor_msgs::msg::Image> ("/detection/duck_bbox_image", 10);
     point_pub_ = create_publisher<geometry_msgs::msg::PointStamped> ("/detection/duck_position", 10);
-    path_pub_  = create_publisher<natto_msgs::msg::SpeedPath> ("/duck_planning_path", 10);
+    path_pub_  = create_publisher<natto_msgs::msg::SpeedPath> ("/planning/speed_path", 10);
 
     color_sub_   = create_subscription<sensor_msgs::msg::Image> ("/camera/camera/color/image_raw", 10, std::bind (&duck_detection::colorCallback, this, std::placeholders::_1));
     depth_sub_   = create_subscription<sensor_msgs::msg::Image> ("/camera/camera/aligned_depth_to_color/image_raw", 10, std::bind (&duck_detection::depthCallback, this, std::placeholders::_1));
     caminfo_sub_ = create_subscription<sensor_msgs::msg::CameraInfo> ("/camera/camera/color/camera_info", 10, std::bind (&duck_detection::cameraInfoCallback, this, std::placeholders::_1));
+    current_pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>("/localization/current_pose", 10, std::bind(&duck_detection::currentPoseCallback, this,std::placeholders::_1));
 
     tf_buffer_   = std::make_unique<tf2_ros::Buffer> (this->get_clock ());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener> (*tf_buffer_);
@@ -31,7 +32,7 @@ void duck_detection::timerCallback () {
     goal_pose.header.stamp    = this->now ();
     goal_pose.header.frame_id = "map";
 
-    goal_pose.pose.position.x = map_point.point.x - 0.7;  // 少し手前に行く
+    goal_pose.pose.position.x = map_point.point.x - 0.9;  // 少し手前に行く
     goal_pose.pose.position.y = map_point.point.y;
     goal_pose.pose.position.z = 0.0;
 
@@ -183,128 +184,88 @@ void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg
     }
     point_pub_->publish (map_point);
 }
-void duck_detection::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
-    if (current_pose_.pose.position.x == 0.0 && current_pose_.pose.position.y == 0.0 && current_pose_.pose.position.z == 0.0) return;
+void duck_detection::planningPath(geometry_msgs::msg::PoseStamped goal_pose)
+{
+    if (current_pose_.pose.position.x == 0.0 &&
+        current_pose_.pose.position.y == 0.0 &&
+        current_pose_.pose.position.z == 0.0) return;
 
-    // ===== 最大速度 =====
-    double v_max = 0.8;  // m/s
-    double w_max = 1.5;  // rad/s
+    RCLCPP_INFO(get_logger(), "start planning");
+
+    double v_max = 0.8;
+    double w_max = 1.5;
 
     natto_msgs::msg::SpeedPath speed_path;
-    speed_path.header.stamp    = this->now ();
+    speed_path.header.stamp    = this->now();
     speed_path.header.frame_id = "map";
 
-    // ===== 現在位置 =====
-    double current_x = current_pose_.pose.position.x;
-    double current_y = current_pose_.pose.position.y;
+    double current_x   = current_pose_.pose.position.x;
+    double current_y   = current_pose_.pose.position.y;
+    double current_yaw = quat_to_yaw(current_pose_.pose.orientation);
 
-    double current_yaw = quat_to_yaw (current_pose_.pose.orientation);
+    double goal_x   = goal_pose.pose.position.x;
+    double goal_y   = goal_pose.pose.position.y;
+    double goal_yaw = quat_to_yaw(goal_pose.pose.orientation);
 
-    // ===== 目標位置 =====
-    double goal_x = goal_pose.pose.position.x;
-    double goal_y = goal_pose.pose.position.y;
-
-    double goal_yaw = quat_to_yaw (goal_pose.pose.orientation);
-
-    double dx             = goal_x - current_x;
-    double dy             = goal_y - current_y;
-    double goal_direction = std::atan2 (dy, dx);
-
+    double dx   = goal_x - current_x;
+    double dy   = goal_y - current_y;
     double dyaw = goal_yaw - current_yaw;
+    double goal_direction = std::atan2(dy, dx);
 
-    while (dyaw > M_PI) dyaw -= 2.0 * M_PI;
+    while (dyaw >  M_PI) dyaw -= 2.0 * M_PI;
     while (dyaw < -M_PI) dyaw += 2.0 * M_PI;
 
-    double step_yaw = 0.1;  // rad
-    int    N        = std::max (2, static_cast<int> (std::abs (dyaw) / step_yaw));
-    for (int i = 0; i <= N; i++) {
-        double s = static_cast<double> (i) / N;  // 0〜1
+    double total_dist = std::hypot(dx, dy);
+    double step = 0.05;
 
-        double tri;
-        if (s < 0.5)
-            tri = 2.0 * s;
-        else
-            tri = 2.0 * (1.0 - s);
+    int N = std::max(2, static_cast<int>(total_dist / step));
 
+    for (int i = 0; i <= N; i++)
+    {
+        double s = static_cast<double>(i) / N;
+
+        // ===== V字プロファイル =====
+        double tri = (s < 0.5) ? 2.0*s : 2.0*(1.0-s);
         if (tri < 0.0) tri = 0.0;
 
-        double yaw = current_yaw + s * dyaw;
-
+        double v = v_max * tri;
         double w = w_max * tri;
 
-        // yaw方向に符号を合わせる
-        if (dyaw < 0.0) w = -w;
-
-		geometry_msgs::msg::PoseStamped pose;
-		pose.header = speed_path.header;
-
-		pose.pose = current_pose_.pose;
-		pose.pose.orientation.x = 0.0;
-		pose.pose.orientation.y = 0.0;
-		pose.pose.orientation.z = std::sin (yaw * 0.5);
-		pose.pose.orientation.w = std::cos (yaw * 0.5);
-		speed_path.path.push_back (pose);
-
-		geometry_msgs::msg::TwistStamped twist;
-		twist.header = speed_path.header;
-
-		twist.twist.linear.x = 0.0;
-		twist.twist.linear.y = 0.0;
-		twist.twist.linear.z = 0.0;
-		twist.twist.angular.x = 0.0;
-		twist.twist.angular.y = 0.0;
-		twist.twist.angular.z = w;
-		speed_path.twist.push_back (twist);
-    }
-
-    double step_length = 0.05;  // 5cmごと
-
-    N = std::max (2, static_cast<int> (std::hypot (dx, dy) / step_length));
-
-    for (int i = 0; i <= N; i++) {
-        double s = static_cast<double> (i) / N;  // 0〜1
-
-        double tri;
-        if (s < 0.5)
-            tri = 2.0 * s;
-        else
-            tri = 2.0 * (1.0 - s);
-
-        if (tri < 0.0) tri = 0.0;
-
-        // ===== 位置補間 =====
-        double x = current_x + s * dx;
-        double y = current_y + s * dy;
-
-        // ===== 速度 =====
-        double v = v_max * tri;
+        // ===== 同時補間 =====
+        double x   = current_x + s * dx;
+        double y   = current_y + s * dy;
+        double yaw = current_yaw + s * dyaw;
 
         // ===== Pose =====
         geometry_msgs::msg::PoseStamped pose;
         pose.header = speed_path.header;
+        pose.pose.position.x = x;
+        pose.pose.position.y = y;
+        pose.pose.position.z = 0.0;
+        pose.pose.orientation.x = 0.0;
+        pose.pose.orientation.y = 0.0;
+        pose.pose.orientation.z = std::sin(yaw * 0.5);
+        pose.pose.orientation.w = std::cos(yaw * 0.5);
 
-        pose.pose = goal_pose.pose;
-		pose.pose.position.x = x;
-		pose.pose.position.y = y;
-		pose.pose.position.z = 0.0;
-
-        speed_path.path.push_back (pose);
+        speed_path.path.push_back(pose);
 
         // ===== Twist =====
         geometry_msgs::msg::TwistStamped twist;
         twist.header = speed_path.header;
 
-        twist.twist.linear.x = v * std::cos (goal_direction);
-        twist.twist.linear.y = v * std::sin (goal_direction);
+        // ★ 超重要：その時点の yaw を使う
+        twist.twist.linear.x = v * std::cos(goal_direction - yaw);
+        twist.twist.linear.y = v * std::sin(goal_direction - yaw);
         twist.twist.linear.z = 0.0;
 
         twist.twist.angular.x = 0.0;
         twist.twist.angular.y = 0.0;
-        twist.twist.angular.z = 0.0;
+        twist.twist.angular.z = (dyaw >= 0.0 ? w : -w);
 
-        speed_path.twist.push_back (twist);
+        speed_path.twist.push_back(twist);
     }
-    path_pub_->publish (speed_path);
+
+    path_pub_->publish(speed_path);
 }
 void duck_detection::currentPoseCallback (const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
     current_pose_ = *msg;

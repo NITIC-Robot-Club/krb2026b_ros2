@@ -7,12 +7,11 @@
             <param name="model_path" value="$(var model_path)"/>
         </composable_node>
 
-        <!-- RealSense Camera -->
-        <composable_node pkg="realsense2_camera" plugin="realsense2_camera::RealSenseNodeFactory" name="realsense_camera" namespace="/camera">
-            <param name="align_depth.enable" value="true"/>
-            <param name="rgb_camera.color_profile" value="640,480,60"/>
-            <param name="depth_module.depth_profile" value="640,480,60"/>
-        </composable_node>
-        
+        <!-- RealSense Camera -->        
     </node_container>
+    <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py">
+        <arg name="align_depth.enable" value="true"/>
+        <arg name="rgb_camera.color_profile" value="640x480x30"/>
+        <arg name="depth_module.depth_profile" value="640x480x30"/>
+     </include>
 </launch>
