@@ -1,5 +1,5 @@
 <launch>
-    <arg name="model_path" default="$(find-pkg-share krb2026b_launch)/model/last_int8_openvino_model/last.xml"/>
+    <arg name="model_path" default="$(find-pkg-share krb2026b_launch)/model/best_int8_openvino_model/best.xml"/>
 
     <node_container pkg="rclcpp_components" exec="component_container" name="detection_container" namespace="detection">
         <!-- 画像認識 -->
