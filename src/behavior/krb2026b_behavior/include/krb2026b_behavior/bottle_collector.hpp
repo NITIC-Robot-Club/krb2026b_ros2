@@ -25,7 +25,11 @@
 #include "natto_msgs/msg/speed_path.hpp"
 #include "natto_msgs/msg/state_action.hpp"
 #include "natto_msgs/msg/state_result.hpp"
+#include "std_msgs/msg/bool.hpp"
 
+#include <algorithm>
+#include <chrono>
+#include <cmath>
 #include <utility>
 
 namespace bottle_collector {
@@ -33,8 +37,7 @@ namespace bottle_collector {
 class bottle_collector : public rclcpp::Node {
    public:
     bottle_collector (const rclcpp::NodeOptions &node_options);
-    ~bottle_collector ();
-
+    
    private:
     double max_velocity_mps_;
     double acceleration_mps2_;
@@ -46,6 +49,7 @@ class bottle_collector : public rclcpp::Node {
 
     void state_action_callback (const natto_msgs::msg::StateAction::SharedPtr msg);
     void bottle_pairs_callback (const geometry_msgs::msg::PoseArray::SharedPtr msg);
+    void goal_reached_callback (const std_msgs::msg::Bool::SharedPtr msg);
     void timer_callback ();
 
     void collect_bottle (const natto_msgs::msg::StateAction::SharedPtr msg);
@@ -72,6 +76,7 @@ class bottle_collector : public rclcpp::Node {
 
     rclcpp::Subscription<natto_msgs::msg::StateAction>::SharedPtr  state_action_subscriber_;
     rclcpp::Subscription<geometry_msgs::msg::PoseArray>::SharedPtr bottle_pairs_subscriber_;
+    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr           goal_reached_subscriber_;
 };
 
 }  // namespace bottle_collector

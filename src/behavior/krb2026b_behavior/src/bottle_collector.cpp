@@ -1,9 +1,5 @@
 #include "krb2026b_behavior/bottle_collector.hpp"
 
-#include <algorithm>
-#include <chrono>
-#include <cmath>
-
 namespace bottle_collector {
 
 bottle_collector::bottle_collector (const rclcpp::NodeOptions &node_options) : Node ("bottle_collector", node_options) {
@@ -14,7 +10,7 @@ bottle_collector::bottle_collector (const rclcpp::NodeOptions &node_options) : N
     offset_large_m_    = this->declare_parameter<double> ("offset_large_m", 0.42);
     y_thresh_m_        = this->declare_parameter<double> ("y_thresh_m", 0.02);
     yaw_thresh_rad_    = this->declare_parameter<double> ("yaw_thresh_deg", 3.0) * M_PI / 180.0;
-    double frequency   = this->declare_parameter<double> ("frequency", 10.0);
+    double frequency   = this->declare_parameter<double> ("frequency", 100.0);
 
     tf_buffer_   = std::make_shared<tf2_ros::Buffer> (this->get_clock ());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener> (*tf_buffer_);
@@ -25,6 +21,7 @@ bottle_collector::bottle_collector (const rclcpp::NodeOptions &node_options) : N
 
     state_action_subscriber_ = this->create_subscription<natto_msgs::msg::StateAction> ("state_action", 10, std::bind (&bottle_collector::state_action_callback, this, std::placeholders::_1));
     bottle_pairs_subscriber_ = this->create_subscription<geometry_msgs::msg::PoseArray> ("bottle_pairs", 10, std::bind (&bottle_collector::bottle_pairs_callback, this, std::placeholders::_1));
+    goal_reached_subscriber_ = this->create_subscription<std_msgs::msg::Bool> ("goal_reached", 10, std::bind (&bottle_collector::goal_reached_callback, this, std::placeholders::_1));
 
     timer_ = this->create_wall_timer (std::chrono::duration<double> (1.0 / frequency), std::bind (&bottle_collector::timer_callback, this));
 
@@ -49,12 +46,24 @@ void bottle_collector::state_action_callback (const natto_msgs::msg::StateAction
 
 void bottle_collector::timer_callback () {
     if (!collecting_) return;
-    collecting_ = false;
     collect_bottle (pending_action_msg_);
 }
 
 void bottle_collector::bottle_pairs_callback (const geometry_msgs::msg::PoseArray::SharedPtr msg) {
     latest_bottle_pairs_ = msg;
+}
+
+void bottle_collector::goal_reached_callback (const std_msgs::msg::Bool::SharedPtr msg) {
+    if (!collecting_) return;
+    if (msg->data) {
+        natto_msgs::msg::StateResult result;
+        result.state_id    = pending_action_msg_->state_id;
+        result.action_name = "collect_bottle";
+        result.success     = true;
+        collecting_        = false;
+        state_result_publisher_->publish (result);
+        RCLCPP_INFO (this->get_logger (), "collect_bottle: goal reached, publishing success.");
+    }
 }
 
 void bottle_collector::collect_bottle (const natto_msgs::msg::StateAction::SharedPtr msg) {
@@ -117,19 +126,16 @@ void bottle_collector::collect_bottle (const natto_msgs::msg::StateAction::Share
     speed_path_publisher_->publish (speed_path);
 
     auto [goal_x_map, goal_y_map] = transform_point (gx_normal, gy_normal, tf_base_to_map);
-    double gyaw_map               = approach_yaw + robot_yaw_map;
+    double goal_yaw_map               = approach_yaw + robot_yaw_map;
 
     geometry_msgs::msg::PoseStamped goal;
     goal.header.frame_id    = "map";
     goal.header.stamp       = this->now ();
     goal.pose.position.x    = goal_x_map;
     goal.pose.position.y    = goal_y_map;
-    goal.pose.orientation.z = std::sin (gyaw_map * 0.5);
-    goal.pose.orientation.w = std::cos (gyaw_map * 0.5);
+    goal.pose.orientation.z = std::sin (goal_yaw_map * 0.5);
+    goal.pose.orientation.w = std::cos (goal_yaw_map * 0.5);
     goal_pose_publisher_->publish (goal);
-
-    result.success = true;
-    state_result_publisher_->publish (result);
 
     RCLCPP_INFO (this->get_logger (), "collect_bottle: SpeedPath published (%zu waypoints, need_phase1=%d).", speed_path.path.size (), need_phase1);
 }

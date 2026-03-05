@@ -1,12 +1,5 @@
 #include "krb2026b_bottle_detection/bottle_detection.hpp"
 
-#include "geometry_msgs/msg/point.hpp"
-#include "geometry_msgs/msg/pose.hpp"
-#include "visualization_msgs/msg/marker.hpp"
-
-#include <algorithm>
-#include <cmath>
-
 namespace bottle_detection {
 
 bottle_detection::bottle_detection (const rclcpp::NodeOptions &node_options) : Node ("bottle_detection", node_options) {
