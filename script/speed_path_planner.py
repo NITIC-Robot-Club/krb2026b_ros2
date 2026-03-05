@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 from pathlib import Path
+import math
 
 # ===============================
 # Parameters
@@ -11,18 +12,18 @@ from pathlib import Path
 N = 50
 W_POS = 1e1
 W_YAW = 1e1
-W_LEN = 1e-2
+W_LEN = 1
 
-max_acc = 5.0
-max_vel = 3.0
-max_w = 3.14
-max_aw = 6.28
-import math
+max_acc = 3.0
+max_vel = 4.0
+max_w = np.pi
+max_aw = np.pi/ 10
 
 waypoints = []
 
-margin = 0.03
+margin = 0.02
 debug_robot_radius = 0.37
+
 
 
 while True:
@@ -100,8 +101,8 @@ aw = opti.variable(N)
 # ===============================
 
 for k in range(N-1):
-    opti.subject_to(x[k+1]  == x[k]  + dt * vx[k])
-    opti.subject_to(y[k+1]  == y[k]  + dt * vy[k])
+    opti.subject_to(x[k+1]  == x[k]  + dt * vx[k] * ca.cos(yaw[k]) - dt * vy[k] * ca.sin(yaw[k]))
+    opti.subject_to(y[k+1]  == y[k]  + dt * vx[k] * ca.sin(yaw[k]) + dt * vy[k] * ca.cos(yaw[k]))
     opti.subject_to(yaw[k+1] == yaw[k] + dt * w[k])
     opti.subject_to(vx[k+1] == vx[k] + dt * ax[k])
     opti.subject_to(vy[k+1] == vy[k] + dt * ay[k])
@@ -227,7 +228,7 @@ opti.set_initial(yaw, yaw_init)
 
 opti.solver("ipopt",{
     "ipopt.print_level":0,
-    "ipopt.max_iter":1000
+    "ipopt.max_iter":3000
 })
 
 opti.minimize(T + wp_cost + length_cost)
@@ -259,25 +260,55 @@ with open(filename, "w", newline="") as f:
 print(f"Saved trajectory to {filename}")
 
 
+
 # ===============================
 # Visualization
 # ===============================
 
-plt.figure()
+x_vals = np.array([sol.value(x[i]) for i in range(N)])
+y_vals = np.array([sol.value(y[i]) for i in range(N)])
+yaw_vals = np.array([sol.value(yaw[i]) for i in range(N)])
+
+vx_vals = np.array([sol.value(vx[i]) for i in range(N)])
+vy_vals = np.array([sol.value(vy[i]) for i in range(N)])
+w_vals  = np.array([sol.value(w[i])  for i in range(N)])
+
+ax_vals = np.array([sol.value(ax[i]) for i in range(N)])
+ay_vals = np.array([sol.value(ay[i]) for i in range(N)])
+aw_vals = np.array([sol.value(aw[i]) for i in range(N)])
+
+t_vals = np.linspace(0, sol.value(T), N)
+
+# ===============================
+# Figure layout
+# ===============================
+
+fig, axs = plt.subplots(2,2, figsize=(13,10))
+
+ax_traj = axs[0,0]
+ax_x    = axs[0,1]
+ax_y    = axs[1,0]
+ax_yaw  = axs[1,1]
+
+# ===============================
+# Trajectory
+# ===============================
 
 collision_flags = []
 
 for i in range(N):
-    px = sol.value(x[i])
-    py = sol.value(y[i])
+
+    px = x_vals[i]
+    py = y_vals[i]
 
     collided = False
 
     for seg in line_segments:
+
         x1,y1,x2,y2 = seg
 
-        dx = x2 - x1
-        dy = y2 - y1
+        dx = x2-x1
+        dy = y2-y1
         l2 = dx*dx + dy*dy + 1e-8
 
         t = ((px-x1)*dx + (py-y1)*dy)/l2
@@ -288,41 +319,94 @@ for i in range(N):
 
         dist = np.sqrt((px-proj_x)**2 + (py-proj_y)**2)
 
-
-        safe_r = debug_robot_radius + margin    
-        if dist < safe_r:
+        if dist < debug_robot_radius + margin:
             collided = True
             break
 
-
     collision_flags.append(collided)
 
-
 for k in range(N-1):
+
     if collision_flags[k]:
-        plt.plot(sol.value(x[k:k+2]),
-                sol.value(y[k:k+2]),
-                'r')
+        ax_traj.plot(x_vals[k:k+2], y_vals[k:k+2],'r')
     else:
-        plt.plot(sol.value(x[k:k+2]),
-                sol.value(y[k:k+2]),
-                'b')
+        ax_traj.plot(x_vals[k:k+2], y_vals[k:k+2],'b')
 
+# waypoint
 
-plt.scatter([w[0] for w in waypoints],
-            [w[1] for w in waypoints])
+ax_traj.scatter(
+    [w[0] for w in waypoints],
+    [w[1] for w in waypoints]
+)
 
+# obstacle
 
 for seg in line_segments:
-    plt.plot([seg[0],seg[2]],
-            [seg[1],seg[3]], 'k')
+    ax_traj.plot([seg[0],seg[2]],[seg[1],seg[3]],'k')
 
-plt.gca().set_aspect("equal")
-plt.title("Trajectory (Red = Collision)")
+# heading
 
-plt.show(block=False)
+arrow_len = 0.25
+
+for i in range(N):
+
+    dx = arrow_len*np.cos(yaw_vals[i])
+    dy = arrow_len*np.sin(yaw_vals[i])
+
+    ax_traj.arrow(
+        x_vals[i],
+        y_vals[i],
+        dx,
+        dy,
+        head_width=0.05,
+        head_length=0.07
+    )
+
+ax_traj.set_aspect("equal")
+ax_traj.set_title("Trajectory")
+ax_traj.grid()
+
+# ===============================
+# x-t graph
+# ===============================
+
+ax_x.plot(t_vals, x_vals, label="x")
+ax_x.plot(t_vals, vx_vals, label="vx")
+ax_x.plot(t_vals, ax_vals, label="ax")
+
+ax_x.set_title("X state")
+ax_x.set_xlabel("time")
+ax_x.legend()
+ax_x.grid()
+
+# ===============================
+# y-t graph
+# ===============================
+
+ax_y.plot(t_vals, y_vals, label="y")
+ax_y.plot(t_vals, vy_vals, label="vy")
+ax_y.plot(t_vals, ay_vals, label="ay")
+
+ax_y.set_title("Y state")
+ax_y.set_xlabel("time")
+ax_y.legend()
+ax_y.grid()
+
+# ===============================
+# yaw graph
+# ===============================
+
+ax_yaw.plot(t_vals, yaw_vals, label="yaw")
+ax_yaw.plot(t_vals, w_vals, label="w")
+ax_yaw.plot(t_vals, aw_vals, label="aw")
+
+ax_yaw.set_title("Yaw state")
+ax_yaw.set_xlabel("time")
+ax_yaw.legend()
+ax_yaw.grid()
+
+plt.tight_layout()
 try:
-    while True:
-        plt.pause(0.1)
-except KeyboardInterrupt:
+    plt.show()
+except:
     plt.close()
