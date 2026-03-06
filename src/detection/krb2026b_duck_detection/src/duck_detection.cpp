@@ -10,12 +10,12 @@ duck_detection::duck_detection (const rclcpp::NodeOptions &options) : Node ("duc
     compiled_model_   = core.compile_model (model, "CPU");
     output_layer_     = compiled_model_.output (0);
 
-    image_pub_ = create_publisher<sensor_msgs::msg::Image> ("/detection/duck_bbox_image", 10);
-    point_pub_ = create_publisher<geometry_msgs::msg::PointStamped> ("/detection/duck_position", 10);
+    image_pub_ = create_publisher<sensor_msgs::msg::Image> ("duck_bbox_image", 10);
+    point_pub_ = create_publisher<geometry_msgs::msg::PointStamped> ("duck_position", 10);
 
-    color_sub_   = create_subscription<sensor_msgs::msg::Image> ("/camera/camera/color/image_raw", 10, std::bind (&duck_detection::colorCallback, this, std::placeholders::_1));
-    depth_sub_   = create_subscription<sensor_msgs::msg::Image> ("/camera/camera/aligned_depth_to_color/image_raw", 10, std::bind (&duck_detection::depthCallback, this, std::placeholders::_1));
-    caminfo_sub_ = create_subscription<sensor_msgs::msg::CameraInfo> ("/camera/camera/color/camera_info", 10, std::bind (&duck_detection::cameraInfoCallback, this, std::placeholders::_1));
+    color_sub_   = create_subscription<sensor_msgs::msg::Image> ("color_image_raw", 10, std::bind (&duck_detection::colorCallback, this, std::placeholders::_1));
+    depth_sub_   = create_subscription<sensor_msgs::msg::Image> ("aligned_depth_to_color_image_raw", 10, std::bind (&duck_detection::depthCallback, this, std::placeholders::_1));
+    caminfo_sub_ = create_subscription<sensor_msgs::msg::CameraInfo> ("camera_info", 10, std::bind (&duck_detection::cameraInfoCallback, this, std::placeholders::_1));
     tf_buffer_   = std::make_unique<tf2_ros::Buffer> (this->get_clock ());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener> (*tf_buffer_);
 
@@ -148,7 +148,8 @@ void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg
     image_pub_->publish (*out_msg);
 
     if (use_x == 0.0 && use_y == 0.0 && use_z == 0.0) return;
-
+    if (use_z > 5.0) return;
+    
     geometry_msgs::msg::PointStamped point_msg;
     point_msg.header  = msg->header;
     point_msg.point.x = use_x;

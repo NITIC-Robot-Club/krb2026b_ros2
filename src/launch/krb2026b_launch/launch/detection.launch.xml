@@ -1,4 +1,6 @@
 <launch>
+    <arg name="model_path" default="$(find-pkg-share krb2026b_launch)/model/best_int8_openvino_model/best.xml"/>
+
     <node_container pkg="rclcpp_components" exec="component_container" name="detection_container" namespace="/detection">
         <!-- bottle detection -->
         <composable_node pkg="krb2026b_bottle_detection" plugin="bottle_detection::bottle_detection" name="bottle_detection" namespace="/detection">
@@ -19,6 +21,9 @@
 
         <composable_node pkg="krb2026b_duck_detection" plugin="duck_detection::duck_detection" name="duck_detection" namespace="/detection">
             <param name="model_path" value="$(var model_path)"/>
+            <remap from="color_image_raw" to="/sensing/camera/color/image_raw"/>
+            <remap from="aligned_depth_to_color_image_raw" to="/sensing/camera/aligned_depth_to_color/image_raw"/>
+            <remap from="camera_info" to="/sensing/camera/color/camera_info"/>
         </composable_node>
 
         <composable_node pkg="krb2026b_behavior" plugin="duck_collector::duck_collector" name="duck_collector" namespace="/behavior">
@@ -26,9 +31,4 @@
         </composable_node>
     </node_container>
 
-    <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py">
-        <arg name="align_depth.enable" value="true"/>
-        <arg name="rgb_camera.color_profile" value="640x480x30"/>
-        <arg name="depth_module.depth_profile" value="640x480x30"/>
-     </include>
 </launch>
