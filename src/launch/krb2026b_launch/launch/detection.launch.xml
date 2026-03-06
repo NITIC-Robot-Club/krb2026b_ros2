@@ -22,6 +22,7 @@
         </composable_node>
 
         <composable_node pkg="krb2026b_behavior" plugin="duck_collector::duck_collector" name="duck_collector" namespace="/behavior">
+            <remap from="goal_reached" to="/control/dynamic/goal_reached"/>
         </composable_node>
     </node_container>
 
