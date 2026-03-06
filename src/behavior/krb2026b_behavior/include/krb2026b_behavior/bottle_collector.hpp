@@ -22,6 +22,7 @@
 #include "geometry_msgs/msg/pose_array.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "natto_msgs/msg/speed_path.hpp"
 #include "natto_msgs/msg/state_action.hpp"
 #include "natto_msgs/msg/state_result.hpp"
@@ -41,6 +42,7 @@ class bottle_collector : public rclcpp::Node {
    private:
     double max_velocity_mps_;
     double acceleration_mps2_;
+    double min_start_velocity_mps_;
     double path_step_m_;
     double offset_normal_m_;
     double offset_large_m_;
@@ -50,6 +52,7 @@ class bottle_collector : public rclcpp::Node {
     void state_action_callback (const natto_msgs::msg::StateAction::SharedPtr msg);
     void bottle_pairs_callback (const geometry_msgs::msg::PoseArray::SharedPtr msg);
     void goal_reached_callback (const std_msgs::msg::Bool::SharedPtr msg);
+    void current_speed_callback (const geometry_msgs::msg::TwistStamped::SharedPtr msg);
     void timer_callback ();
 
     void collect_bottle (const natto_msgs::msg::StateAction::SharedPtr msg);
@@ -57,12 +60,13 @@ class bottle_collector : public rclcpp::Node {
     natto_msgs::msg::SpeedPath generate_speed_path (double gx_large_base, double gy_large_base, double gx_normal_base, double gy_normal_base, double gyaw_base, bool need_phase1, const geometry_msgs::msg::TransformStamped &tf_base_to_map);
 
     double                    quat_to_yaw (const geometry_msgs::msg::Quaternion &q);
-    double                    trapezoid_velocity (double s, double total_dist);
+    double                    trapezoid_velocity (double s, double total_dist, double initial_speed_mps);
     std::pair<double, double> transform_point (double x, double y, const geometry_msgs::msg::TransformStamped &tf);
     std::pair<double, double> inverse_transform_point (double x, double y, const geometry_msgs::msg::TransformStamped &tf);
 
     geometry_msgs::msg::PoseArray::SharedPtr latest_bottle_pairs_;
     natto_msgs::msg::StateAction::SharedPtr  pending_action_msg_;
+    double                                   current_speed_mps_{0.0};
     bool                                     collecting_{false};
 
     rclcpp::TimerBase::SharedPtr timer_;
@@ -77,6 +81,7 @@ class bottle_collector : public rclcpp::Node {
     rclcpp::Subscription<natto_msgs::msg::StateAction>::SharedPtr  state_action_subscriber_;
     rclcpp::Subscription<geometry_msgs::msg::PoseArray>::SharedPtr bottle_pairs_subscriber_;
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr           goal_reached_subscriber_;
+    rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr current_speed_subscriber_;
 };
 
 }  // namespace bottle_collector

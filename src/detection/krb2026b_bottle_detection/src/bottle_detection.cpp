@@ -3,7 +3,7 @@
 namespace bottle_detection {
 
 bottle_detection::bottle_detection (const rclcpp::NodeOptions &node_options) : Node ("bottle_detection", node_options) {
-    detect_area_global_x_ = this->declare_parameter<std::vector<double>> ("detect_area_global_x", {1.1, 1.1, 3.0, 3.0});
+    detect_area_global_x_ = this->declare_parameter<std::vector<double>> ("detect_area_global_x", {1.7, 1.7, 3.0, 3.0});
     detect_area_global_y_ = this->declare_parameter<std::vector<double>> ("detect_area_global_y", {0.1, 1.0, 1.0, 0.1});
     exclude_footprint_x_  = this->declare_parameter<std::vector<double>> ("exclude_footprint_x", {-0.25, 0.3, 0.3, -0.25});
     exclude_footprint_y_  = this->declare_parameter<std::vector<double>> ("exclude_footprint_y", {-0.3, -0.3, 0.3, 0.3});

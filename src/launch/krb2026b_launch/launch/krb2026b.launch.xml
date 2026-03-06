@@ -29,4 +29,6 @@
     <arg name="joint_state_topics" default="['/swerve/command_joint_states', '/controller/joint_states', '/behavior/command_joint_states', '/test/command_joint_states']"/>
 
     <include file="$(find-pkg-share natto_launch)/launch/natto.launch.xml"/>
+
+    <include file="$(find-pkg-share krb2026b_launch)/launch/detection.launch.xml"/>
 </launch>

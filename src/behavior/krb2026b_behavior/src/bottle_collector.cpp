@@ -5,6 +5,7 @@ namespace bottle_collector {
 bottle_collector::bottle_collector (const rclcpp::NodeOptions &node_options) : Node ("bottle_collector", node_options) {
     max_velocity_mps_  = this->declare_parameter<double> ("max_velocity_mps", 0.5);
     acceleration_mps2_ = this->declare_parameter<double> ("acceleration_mps2", 0.3);
+    min_start_velocity_mps_ = this->declare_parameter<double> ("min_start_velocity_mps", 0.08);
     path_step_m_       = this->declare_parameter<double> ("path_step_m", 0.05);
     offset_normal_m_   = this->declare_parameter<double> ("offset_normal_m", 0.325);
     offset_large_m_    = this->declare_parameter<double> ("offset_large_m", 0.42);
@@ -22,12 +23,14 @@ bottle_collector::bottle_collector (const rclcpp::NodeOptions &node_options) : N
     state_action_subscriber_ = this->create_subscription<natto_msgs::msg::StateAction> ("state_action", 10, std::bind (&bottle_collector::state_action_callback, this, std::placeholders::_1));
     bottle_pairs_subscriber_ = this->create_subscription<geometry_msgs::msg::PoseArray> ("bottle_pairs", 10, std::bind (&bottle_collector::bottle_pairs_callback, this, std::placeholders::_1));
     goal_reached_subscriber_ = this->create_subscription<std_msgs::msg::Bool> ("goal_reached", 10, std::bind (&bottle_collector::goal_reached_callback, this, std::placeholders::_1));
+    current_speed_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped> ("current_speed", 10, std::bind (&bottle_collector::current_speed_callback, this, std::placeholders::_1));
 
     timer_ = this->create_wall_timer (std::chrono::duration<double> (1.0 / frequency), std::bind (&bottle_collector::timer_callback, this));
 
     RCLCPP_INFO (this->get_logger (), "bottle_collector node has been initialized.");
     RCLCPP_INFO (this->get_logger (), "max_velocity_mps: %f", max_velocity_mps_);
     RCLCPP_INFO (this->get_logger (), "acceleration_mps2: %f", acceleration_mps2_);
+    RCLCPP_INFO (this->get_logger (), "min_start_velocity_mps: %f", min_start_velocity_mps_);
     RCLCPP_INFO (this->get_logger (), "path_step_m: %f", path_step_m_);
     RCLCPP_INFO (this->get_logger (), "offset_normal_m: %f", offset_normal_m_);
     RCLCPP_INFO (this->get_logger (), "offset_large_m: %f", offset_large_m_);
@@ -50,7 +53,9 @@ void bottle_collector::timer_callback () {
 }
 
 void bottle_collector::bottle_pairs_callback (const geometry_msgs::msg::PoseArray::SharedPtr msg) {
-    latest_bottle_pairs_ = msg;
+    if (collecting_) {
+        latest_bottle_pairs_ = msg;
+    }
 }
 
 void bottle_collector::goal_reached_callback (const std_msgs::msg::Bool::SharedPtr msg) {
@@ -64,6 +69,12 @@ void bottle_collector::goal_reached_callback (const std_msgs::msg::Bool::SharedP
         state_result_publisher_->publish (result);
         RCLCPP_INFO (this->get_logger (), "collect_bottle: goal reached, publishing success.");
     }
+}
+
+void bottle_collector::current_speed_callback (const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
+    const double vx = msg->twist.linear.x;
+    const double vy = msg->twist.linear.y;
+    current_speed_mps_ = std::hypot (vx, vy);
 }
 
 void bottle_collector::collect_bottle (const natto_msgs::msg::StateAction::SharedPtr msg) {
@@ -108,17 +119,11 @@ void bottle_collector::collect_bottle (const natto_msgs::msg::StateAction::Share
     double gx_normal = tx_base + offset_normal_m_ * std::cos (approach_yaw);
     double gy_normal = ty_base + offset_normal_m_ * std::sin (approach_yaw);
 
-    if (std::hypot (gx_large, gy_large) < 1e-3) {
-        RCLCPP_WARN (this->get_logger (), "collect_bottle: goal too close to current position.");
-        result.success = false;
-        state_result_publisher_->publish (result);
-        return;
-    }
 
     RCLCPP_INFO (this->get_logger (), "collect_bottle: target in base_link: tx=%.3f  ty=%.3f  tyaw=%.1f deg  approach_yaw=%.1f deg", tx_base, ty_base, tyaw_base * 180.0 / M_PI, approach_yaw * 180.0 / M_PI);
 
-    bool need_phase1 = (std::fabs (ty_base) > y_thresh_m_) || (std::fabs (tyaw_base) > yaw_thresh_rad_);
-    RCLCPP_INFO (this->get_logger (), "collect_bottle: need_phase1=%d  (|ty|=%.3f vs %.3f, |tyaw|=%.1f deg vs %.1f deg)", need_phase1, std::fabs (ty_base), y_thresh_m_, std::fabs (tyaw_base) * 180.0 / M_PI, yaw_thresh_rad_ * 180.0 / M_PI);
+    bool need_phase1 = (std::fabs (ty_base) > y_thresh_m_) || (std::fabs (approach_yaw) > yaw_thresh_rad_);
+    RCLCPP_INFO (this->get_logger (), "collect_bottle: need_phase1=%d  (|ty|=%.3f vs %.3f, |tyaw|=%.1f deg vs %.1f deg)", need_phase1, std::fabs (ty_base), y_thresh_m_, std::fabs (approach_yaw) * 180.0 / M_PI, yaw_thresh_rad_ * 180.0 / M_PI);
 
     auto speed_path            = generate_speed_path (gx_large, gy_large, gx_normal, gy_normal, approach_yaw, need_phase1, tf_base_to_map);
     speed_path.header.stamp    = this->now ();
@@ -126,7 +131,7 @@ void bottle_collector::collect_bottle (const natto_msgs::msg::StateAction::Share
     speed_path_publisher_->publish (speed_path);
 
     auto [goal_x_map, goal_y_map] = transform_point (gx_normal, gy_normal, tf_base_to_map);
-    double goal_yaw_map               = approach_yaw + robot_yaw_map;
+    double goal_yaw_map           = approach_yaw + robot_yaw_map;
 
     geometry_msgs::msg::PoseStamped goal;
     goal.header.frame_id    = "map";
@@ -136,8 +141,6 @@ void bottle_collector::collect_bottle (const natto_msgs::msg::StateAction::Share
     goal.pose.orientation.z = std::sin (goal_yaw_map * 0.5);
     goal.pose.orientation.w = std::cos (goal_yaw_map * 0.5);
     goal_pose_publisher_->publish (goal);
-
-    RCLCPP_INFO (this->get_logger (), "collect_bottle: SpeedPath published (%zu waypoints, need_phase1=%d).", speed_path.path.size (), need_phase1);
 }
 
 natto_msgs::msg::SpeedPath bottle_collector::generate_speed_path (
@@ -146,6 +149,7 @@ natto_msgs::msg::SpeedPath bottle_collector::generate_speed_path (
 
     double       robot_yaw_map = quat_to_yaw (tf_base_to_map.transform.rotation);
     rclcpp::Time stamp         = this->now ();
+    const double initial_speed_mps = std::max (current_speed_mps_, min_start_velocity_mps_);
 
     double phase1_end_x = 0.0;
     double phase1_end_y = 0.0;
@@ -154,6 +158,8 @@ natto_msgs::msg::SpeedPath bottle_collector::generate_speed_path (
         double dist1     = std::hypot (gx_large_base, gy_large_base);
         int    n1        = std::max (2, static_cast<int> (dist1 / path_step_m_) + 1);
         double curvature = (dist1 > 1e-6) ? (gyaw_base / dist1) : 0.0;
+        double dir1_x    = (dist1 > 1e-6) ? (gx_large_base / dist1) : 0.0;
+        double dir1_y    = (dist1 > 1e-6) ? (gy_large_base / dist1) : 0.0;
 
         for (int i = 0; i <= n1; ++i) {
             double t        = static_cast<double> (i) / static_cast<double> (n1);
@@ -174,12 +180,13 @@ natto_msgs::msg::SpeedPath bottle_collector::generate_speed_path (
             sp.path.push_back (ps);
 
             double s = t * dist1;
-            double v = trapezoid_velocity (s, dist1);
+            double v = trapezoid_velocity (s, dist1, initial_speed_mps);
 
             geometry_msgs::msg::TwistStamped ts;
             ts.header.frame_id = "base_link";
             ts.header.stamp    = stamp;
-            ts.twist.linear.x  = -v;
+            ts.twist.linear.x  = dir1_x * v;
+            ts.twist.linear.y  = dir1_y * v;
             ts.twist.angular.z = curvature * v;
             sp.twist.push_back (ts);
         }
@@ -216,7 +223,7 @@ natto_msgs::msg::SpeedPath bottle_collector::generate_speed_path (
         sp.path.push_back (ps);
 
         double s = t * dist2;
-        double v = trapezoid_velocity (s, dist2);
+        double v = trapezoid_velocity (s, dist2, initial_speed_mps);
 
         geometry_msgs::msg::TwistStamped ts;
         ts.header.frame_id = "base_link";
@@ -234,13 +241,18 @@ double bottle_collector::quat_to_yaw (const geometry_msgs::msg::Quaternion &q) {
     return std::atan2 (2.0 * (q.w * q.z), 1.0 - 2.0 * (q.z * q.z));
 }
 
-double bottle_collector::trapezoid_velocity (double s, double total_dist) {
+double bottle_collector::trapezoid_velocity (double s, double total_dist, double initial_speed_mps) {
     if (total_dist < 1e-6) {
         return 0.0;
     }
-    double v_up   = std::sqrt (2.0 * acceleration_mps2_ * s);
+    double v0     = std::max (initial_speed_mps, 0.0);
+    double v_up   = std::sqrt (v0 * v0 + 2.0 * acceleration_mps2_ * s);
     double v_down = std::sqrt (2.0 * acceleration_mps2_ * std::max (total_dist - s, 0.0));
-    return std::min ({max_velocity_mps_, v_up, v_down});
+    double v = std::min ({max_velocity_mps_, v_up, v_down});
+    if (s <= path_step_m_) {
+        v = std::max (v, v0);
+    }
+    return v;
 }
 
 std::pair<double, double> bottle_collector::transform_point (double x, double y, const geometry_msgs::msg::TransformStamped &tf) {
