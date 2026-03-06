@@ -9,7 +9,7 @@
 
         <!-- bottle collector -->
         <composable_node pkg="krb2026b_behavior" plugin="bottle_collector::bottle_collector" name="bottle_collector" namespace="/behavior">
-            <remap from="speed_path" to="/planning/speed_path"/>
+            <remap from="path" to="/planning/path"/>
             <remap from="bottle_pairs" to="/detection/bottle_pairs"/>
             <remap from="goal_reached" to="/control/static/goal_reached"/>
             <param name="offset_normal_m" value="0.3"/>
