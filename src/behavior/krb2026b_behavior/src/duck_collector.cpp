@@ -2,7 +2,7 @@
 
 namespace duck_collector {
 duck_collector::duck_collector (const rclcpp::NodeOptions &options) : Node ("duck_collector", options) {
-    path_pub_         = create_publisher<natto_msgs::msg::SpeedPath> ("/planning/speed_path", 10);
+    path_pub_         = create_publisher<natto_msgs::msg::SpeedPath> ("/planning/path", 10);
     state_result_pub_ = create_publisher<natto_msgs::msg::StateResult> ("state_result", 10);
 
     current_pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped> ("/localization/current_pose", 10, std::bind (&duck_collector::currentPoseCallback, this, std::placeholders::_1));
@@ -56,14 +56,9 @@ void duck_collector::timerCallback () {
 void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
     if (current_pose_.pose.position.x == 0.0 && current_pose_.pose.position.y == 0.0 && current_pose_.pose.position.z == 0.0) return;
 
-    RCLCPP_INFO (get_logger (), "start planning");
-
-    double v_max = 0.8;
-    double w_max = 1.5;
-
-    natto_msgs::msg::SpeedPath speed_path;
-    speed_path.header.stamp    = this->now ();
-    speed_path.header.frame_id = "map";
+    nav_msgs::msg::Path path;
+    path.header.stamp    = this->now ();
+    path.header.frame_id = "map";
 
     double current_x   = current_pose_.pose.position.x;
     double current_y   = current_pose_.pose.position.y;
@@ -76,7 +71,6 @@ void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
     double dx             = goal_x - current_x;
     double dy             = goal_y - current_y;
     double dyaw           = goal_yaw - current_yaw;
-    double goal_direction = std::atan2 (dy, dx);
 
     while (dyaw > M_PI) dyaw -= 2.0 * M_PI;
     while (dyaw < -M_PI) dyaw += 2.0 * M_PI;
@@ -89,13 +83,6 @@ void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
     for (int i = 0; i <= N; i++) {
         double s = static_cast<double> (i) / N;
 
-        // ===== V字プロファイル =====
-        double tri = (s < 0.5) ? 2.0 * s : 2.0 * (1.0 - s);
-        if (tri < 0.0) tri = 0.0;
-
-        double v = v_max * tri;
-        double w = w_max * tri;
-
         // ===== 同時補間 =====
         double x   = current_x + s * dx;
         double y   = current_y + s * dy;
@@ -103,7 +90,7 @@ void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
 
         // ===== Pose =====
         geometry_msgs::msg::PoseStamped pose;
-        pose.header             = speed_path.header;
+        pose.header             = path.header;
         pose.pose.position.x    = x;
         pose.pose.position.y    = y;
         pose.pose.position.z    = 0.0;
@@ -112,25 +99,10 @@ void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
         pose.pose.orientation.z = std::sin (yaw * 0.5);
         pose.pose.orientation.w = std::cos (yaw * 0.5);
 
-        speed_path.path.push_back (pose);
-
-        // ===== Twist =====
-        geometry_msgs::msg::TwistStamped twist;
-        twist.header = speed_path.header;
-
-        // ★ 超重要：その時点の yaw を使う
-        twist.twist.linear.x = v * std::cos (goal_direction - yaw);
-        twist.twist.linear.y = v * std::sin (goal_direction - yaw);
-        twist.twist.linear.z = 0.0;
-
-        twist.twist.angular.x = 0.0;
-        twist.twist.angular.y = 0.0;
-        twist.twist.angular.z = (dyaw >= 0.0 ? w : -w);
-
-        speed_path.twist.push_back (twist);
+        path.path.push_back (pose);
     }
 
-    path_pub_->publish (speed_path);
+    path_pub_->publish (path);
 }
 void duck_collector::currentPoseCallback (const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
     current_pose_ = *msg;

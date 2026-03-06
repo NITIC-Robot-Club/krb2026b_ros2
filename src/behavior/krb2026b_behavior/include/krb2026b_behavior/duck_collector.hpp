@@ -4,7 +4,7 @@
 
 #include <geometry_msgs/msg/point_stamped.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
-#include <natto_msgs/msg/speed_path.hpp>
+#include <nav_msgs/msg/path.hpp>
 #include <natto_msgs/msg/state_action.hpp>
 #include <natto_msgs/msg/state_result.hpp>
 #include <std_msgs/msg/bool.hpp>
@@ -29,7 +29,7 @@ class duck_collector : public rclcpp::Node {
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr goal_reached_sub_;
 
     // Publishers
-    rclcpp::Publisher<natto_msgs::msg::SpeedPath>::SharedPtr path_pub_;
+    rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_pub_;
     rclcpp::Publisher<natto_msgs::msg::StateResult>::SharedPtr state_result_pub_;
 
     rclcpp::TimerBase::SharedPtr timer_;
