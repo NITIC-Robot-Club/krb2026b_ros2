@@ -30,28 +30,28 @@
       stop_time_threshold_ms: [100, 100, 100, 100, 100, 100, 100, 100]
       use_position_limit: [false, false, false, false, false, false, false, false]
     rmc_1:
-      motor_num: 2
+      motor_num: 3
       feedback_period_ms: 10
       state_period_ms: 100
       timeout_ms: 255
-      joint_name: ["collector_arm_left", "collector_arm_right"]
-      control_mode: ["position", "position"]
-      ratio: [-36.0, 36.0]
-      origin_get_mode: ["limit_switch", "limit_switch"]
-      origin_target: [1500, -1500]
-      position_offset: [0.0, 0.0]
-      origin_id: [0, 1]
-      max_position: [0.0, 0.0]
-      min_position: [0.0, 0.0]
-      speed_kp: [2.0, 2.0]
-      speed_ki: [1.8, 1.8]
-      speed_kd: [0.1, 0.1]
-      position_kp: [200.0, 200.0]
-      position_ki: [0.0, 0.0]
-      position_kd: [100.0, 100.0]
-      stop_speed_threshold: [60, 60]
-      stop_time_threshold_ms: [100, 100]
-      use_position_limit: [false, false]
+      joint_name: ["collector_arm_left", "collector_arm_right", "helper"]
+      control_mode: ["position", "position", "position"]
+      ratio: [-36.0, 36.0, -36.0]
+      origin_get_mode: ["limit_switch", "limit_switch", "limit_switch"]
+      origin_target: [1500, -1500, 0]
+      position_offset: [0.0, 0.0, 0.0]
+      origin_id: [0, 1, 2]
+      max_position: [0.0, 0.0, 0.0]
+      min_position: [0.0, 0.0, 0.0]
+      speed_kp: [2.0, 2.0, 2.0]
+      speed_ki: [1.8, 1.8, 1.8]
+      speed_kd: [0.1, 0.1, 0.1]
+      position_kp: [200.0, 200.0, 200.0]
+      position_ki: [0.0, 0.0, 0.0]
+      position_kd: [100.0, 100.0, 100.0]
+      stop_speed_threshold: [60, 60, 60]
+      stop_time_threshold_ms: [100, 100, 100]
+      use_position_limit: [false, false, false]
 
       vesc_num: 1
       vesc.joint_name: ["belt_launcher"]

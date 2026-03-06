@@ -28,6 +28,11 @@
       joint_name: "collector_hand_right"
       position_on: 1.57
       position_off: 0.2
+    button_12:
+      function: "joint_speed"
+      mode: "hold"
+      joint_name: "helper"
+      speed_on : 1.0
     button_13:
       function: "get_origin"
       mode: "positive_edge"
