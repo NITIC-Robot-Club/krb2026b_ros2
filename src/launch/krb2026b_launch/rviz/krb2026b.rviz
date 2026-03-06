@@ -16,6 +16,7 @@ Panels:
         - /Sensing1/Raw1/LaserScan1
         - /Sensing1/Raw1/PointCloud21
         - /Simulation1
+        - /Detection1
       Splitter Ratio: 0.5660848021507263
     Tree Height: 811
   - Class: rviz_common/Selection
@@ -1075,39 +1076,6 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /visualization/line_segments
           Value: false
-        - Class: rviz_default_plugins/MarkerArray
-          Enabled: true
-          Name: BottleArray
-          Namespaces:
-            {}
-          Topic:
-            Depth: 5
-            Durability Policy: Volatile
-            History Policy: Keep Last
-            Reliability Policy: Reliable
-            Value: /bottle_markers
-          Value: true
-        - Alpha: 1
-          Arrow Length: 0.30000001192092896
-          Axes Length: 0.30000001192092896
-          Axes Radius: 0.009999999776482582
-          Class: rviz_default_plugins/PoseArray
-          Color: 255; 25; 0
-          Enabled: true
-          Head Length: 0.07000000029802322
-          Head Radius: 0.029999999329447746
-          Name: BottleTarget
-          Shaft Length: 0.23000000417232513
-          Shaft Radius: 0.009999999776482582
-          Shape: Arrow (Flat)
-          Topic:
-            Depth: 5
-            Durability Policy: Volatile
-            Filter size: 10
-            History Policy: Keep Last
-            Reliability Policy: Reliable
-            Value: /bottle_targets
-          Value: true
       Enabled: true
       Name: Sensing
     - Class: rviz_common/Group
@@ -1134,6 +1102,46 @@ Visualization Manager:
           Value: false
       Enabled: true
       Name: Simulation
+    - Class: rviz_common/Group
+      Displays:
+        - Alpha: 1
+          Arrow Length: 0.30000001192092896
+          Axes Length: 0.30000001192092896
+          Axes Radius: 0.009999999776482582
+          Class: rviz_default_plugins/PoseArray
+          Color: 255; 25; 0
+          Enabled: true
+          Head Length: 0.07000000029802322
+          Head Radius: 0.029999999329447746
+          Name: BottleTarget
+          Shaft Length: 0.23000000417232513
+          Shaft Radius: 0.009999999776482582
+          Shape: Arrow (Flat)
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            Filter size: 10
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /detection/bottle_pairs
+          Value: true
+        - Class: rviz_default_plugins/MarkerArray
+          Enabled: true
+          Name: BottleArray
+          Namespaces:
+            bottle: true
+            detect_area: true
+            exclude_footprint: true
+            pair_dir: true
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /detection/bottle_markers
+          Value: true
+      Enabled: true
+      Name: Detection
   Enabled: true
   Global Options:
     Background Color: 60; 60; 60
@@ -1180,7 +1188,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 10
+      Distance: 3.8211421966552734
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -1195,10 +1203,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1
+      Pitch: 1.2147966623306274
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 3.141592025756836
+      Yaw: 6.269778251647949
     Saved: ~
 Window Geometry:
   Displays:

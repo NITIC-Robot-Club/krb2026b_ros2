@@ -66,9 +66,9 @@
       timeout_ms: 255
       joint_name: ["collector_hand_left", "collector_hand_right"]
       control_mode: ["position", "position"]
-      ratio: [1.0, -1.0]
+      ratio: [-1.0, 1.0]
       origin_get_mode: ["stall","stall"]
-      origin_target: [50, -50]
+      origin_target: [-50, 50]
       position_offset: [1.57, 1.57]
       origin_id: [0,0]
       max_position: [0.0, 0.0]
