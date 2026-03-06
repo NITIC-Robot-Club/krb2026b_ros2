@@ -16,7 +16,7 @@ bottle_detection::bottle_detection (const rclcpp::NodeOptions &node_options) : N
     bottle_pairs_publisher_ = this->create_publisher<geometry_msgs::msg::PoseArray> ("bottle_pairs", 10);
     marker_publisher_       = this->create_publisher<visualization_msgs::msg::MarkerArray> ("bottle_markers", 10);
 
-    scan_subscriber_ = this->create_subscription<sensor_msgs::msg::LaserScan> ("/sensing/lidar/laserscan/rear", rclcpp::SensorDataQoS (), std::bind (&bottle_detection::scan_callback, this, std::placeholders::_1));
+    scan_subscriber_ = this->create_subscription<sensor_msgs::msg::LaserScan> ("laserscan", rclcpp::SensorDataQoS (), std::bind (&bottle_detection::scan_callback, this, std::placeholders::_1));
 
     RCLCPP_INFO (this->get_logger (), "bottle_detection node has been initialized.");
     RCLCPP_INFO (this->get_logger (), "cluster_dist_thresh: %f", cluster_dist_thresh_);

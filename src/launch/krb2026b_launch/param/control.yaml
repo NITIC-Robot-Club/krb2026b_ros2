@@ -5,11 +5,11 @@
     min_lookahead_distance_m: 0.05
     max_lookahead_distance_m: 1.0
     yaw_speed_p: 1.0
-    curvature_deceleration_p: 0.2
+    curvature_deceleration_p: 0.4
     min_curvature_speed_m_s: 0.1
     yaw_deceleration_p: 0.0
     max_acceleration_xy_m_s2: 3.0
-    max_speed_xy_m_s: 3.0
+    max_speed_xy_m_s: 2.0
     min_speed_xy_m_s: 0.0
     max_speed_yaw_deg_s: 180.0
     min_speed_yaw_deg_s: 0.0
