@@ -2,7 +2,7 @@
 
 namespace duck_collector {
 duck_collector::duck_collector (const rclcpp::NodeOptions &options) : Node ("duck_collector", options) {
-    path_pub_         = create_publisher<natto_msgs::msg::SpeedPath> ("/planning/path", 10);
+    path_pub_         = create_publisher<nav_msgs::msg::Path> ("/planning/path", 10);
     state_result_pub_ = create_publisher<natto_msgs::msg::StateResult> ("state_result", 10);
 
     current_pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped> ("/localization/current_pose", 10, std::bind (&duck_collector::currentPoseCallback, this, std::placeholders::_1));
@@ -99,7 +99,7 @@ void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
         pose.pose.orientation.z = std::sin (yaw * 0.5);
         pose.pose.orientation.w = std::cos (yaw * 0.5);
 
-        path.path.push_back (pose);
+        path.poses.push_back (pose);
     }
 
     path_pub_->publish (path);
