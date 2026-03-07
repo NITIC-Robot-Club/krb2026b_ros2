@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <node_container pkg="rclcpp_components" exec="component_container" name="sensing_container" namespace="/sensing/lidar">
+    <node_container pkg="rclcpp_components" exec="component_container" name="sensing_lidar_rear_container" namespace="/sensing/lidar">
         <!-- rear -->
         <composable_node pkg="lakibeam1" plugin="lakibeam1::lakibeam1_scan" name="lidar_rear_driver" namespace="/sensing/lidar">
             <remap from="rear" to="/sensing/lidar/laserscan/rear_raw" />
@@ -22,6 +22,9 @@
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
 
+    </node_container>
+
+    <node_container pkg="rclcpp_components" exec="component_container" name="sensing_lidar_container" namespace="/sensing/lidar">
         <!-- right -->
         <composable_node pkg="urg_node2_nl" plugin="urg_node2_nl::UrgNode2NL" name="lidar_right_driver" namespace="/sensing/lidar">
             <remap from="scan" to="/sensing/lidar/laserscan/right_raw"/>
@@ -67,19 +70,11 @@
         <!-- merger -->
         <composable_node pkg="natto_lidar_merger" plugin="pointcloud2_merger::pointcloud2_merger" name="pointcloud_merger" namespace="/sensing/lidar">
             <param name="frame_id" value="base_link"/>
-            <param name="lidar_topics" value="['/sensing/lidar/pointcloud2/right', '/sensing/lidar/pointcloud2/left', '/sensing/lidar/pointcloud2/rear_']"/>
+            <param name="lidar_topics" value="['/sensing/lidar/pointcloud2/right', '/sensing/lidar/pointcloud2/left', '/sensing/lidar/pointcloud2/rear']"/>
             <param name="frequency" value="100.0"/>
             <remap from="merged_pointcloud2" to="/sensing/lidar/pointcloud2/merged"/>
             <remap from="footprint" to="/common/footprint"/>
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
     </node_container>
-
-
-    <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py">
-        <arg name="align_depth.enable" value="true"/>
-        <arg name="rgb_camera.color_profile" value="640x480x30"/>
-        <arg name="depth_module.depth_profile" value="640x480x30"/>
-        <arg name="camera_namespace" value="sensing"/>
-     </include>
 </launch>

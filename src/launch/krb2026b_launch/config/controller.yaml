@@ -20,19 +20,20 @@
       function: "joint_position"
       mode: "hold"
       joint_name: "collector_hand_left"
-      position_on: 1.57    # ボタン押している間開く　逆だと事故る
+      position_on: 1.7    # ボタン押している間開く　逆だと事故る
       position_off: 0.2
     button_10:
       function: "joint_position"
       mode: "hold"
       joint_name: "collector_hand_right"
-      position_on: 1.57
+      position_on: 1.7
       position_off: 0.2
     button_12:
-      function: "joint_speed"
+      function: "joint_position"
       mode: "hold"
       joint_name: "helper"
-      speed_on : 1.0
+      position_on  : 1.57
+      position_off : 0.0 
     button_13:
       function: "get_origin"
       mode: "positive_edge"

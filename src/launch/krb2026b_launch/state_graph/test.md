@@ -12,7 +12,7 @@ stateDiagram-v2
 
 state オブジェクト01 {
     [*] --> オブジェクト01_保持準備 :  set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0, collector_hand_left = 0.2, collector_hand_right = 0.2)
-    オブジェクト01_保持準備 --> オブジェクト01_移動 : set_pose(x = 1.65, y = 0.5, yaw = 180.0)
+    オブジェクト01_保持準備 --> オブジェクト01_移動 : collect_bottle()
     オブジェクト01_移動 --> オブジェクト01_保持 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
     オブジェクト01_保持 --> オブジェクト01_装填 : set_joint_position(collector_arm_left = 1.9, collector_arm_right = 1.9)
     オブジェクト01_装填 --> オブジェクト01_装填完了 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
@@ -23,7 +23,7 @@ state オブジェクト01 {
 
 state オブジェクト23 {
     [*] --> オブジェクト23_保持準備 :  set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0, collector_hand_left = 0.2, collector_hand_right = 0.2)
-    オブジェクト23_保持準備 --> オブジェクト23_移動 : set_pose(x = 2.05, y = 0.5, yaw = 180.0)
+    オブジェクト23_保持準備 --> オブジェクト23_移動 : collect_bottle()
     オブジェクト23_移動 --> オブジェクト23_保持 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
     オブジェクト23_保持 --> オブジェクト23_装填 : set_joint_position(collector_arm_left = 1.9, collector_arm_right = 1.9)
     オブジェクト23_装填 --> オブジェクト23_装填完了 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
@@ -34,7 +34,7 @@ state オブジェクト23 {
 
 state オブジェクト45 {
     [*] --> オブジェクト45_保持準備 :  set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0, collector_hand_left = 0.2, collector_hand_right = 0.2)
-    オブジェクト45_保持準備 --> オブジェクト45_移動 : set_pose(x = 2.45, y = 0.5, yaw = 180.0)
+    オブジェクト45_保持準備 --> オブジェクト45_移動 : collect_bottle()
     オブジェクト45_移動 --> オブジェクト45_保持 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
     オブジェクト45_保持 --> オブジェクト45_装填 : set_joint_position(collector_arm_left = 1.9, collector_arm_right = 1.9)
     オブジェクト45_装填 --> オブジェクト45_装填完了 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
