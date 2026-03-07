@@ -2,6 +2,9 @@
 
 namespace duck_collector {
 duck_collector::duck_collector (const rclcpp::NodeOptions &options) : Node ("duck_collector", options) {
+    x_offset_ = this->declare_parameter<double> ("x_offset_m", -0.9);
+    y_offset_ = this->declare_parameter<double> ("y_offset_m", 0.05);
+
     path_pub_         = create_publisher<nav_msgs::msg::Path> ("/planning/path", 10);
     state_result_pub_ = create_publisher<natto_msgs::msg::StateResult> ("state_result", 10);
 
@@ -42,8 +45,8 @@ void duck_collector::timerCallback () {
     goal_pose.header.stamp    = this->now ();
     goal_pose.header.frame_id = "map";
 
-    goal_pose.pose.position.x = map_point.point.x - 0.9;  // 少し手前に行く
-    goal_pose.pose.position.y = map_point.point.y;
+    goal_pose.pose.position.x = map_point.point.x + x_offset_;
+    goal_pose.pose.position.y = map_point.point.y + y_offset_;
     goal_pose.pose.position.z = 0.0;
 
     goal_pose.pose.orientation.x = 0.0;
@@ -68,9 +71,9 @@ void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
     double goal_y   = goal_pose.pose.position.y;
     double goal_yaw = quat_to_yaw (goal_pose.pose.orientation);
 
-    double dx             = goal_x - current_x;
-    double dy             = goal_y - current_y;
-    double dyaw           = goal_yaw - current_yaw;
+    double dx   = goal_x - current_x;
+    double dy   = goal_y - current_y;
+    double dyaw = goal_yaw - current_yaw;
 
     while (dyaw > M_PI) dyaw -= 2.0 * M_PI;
     while (dyaw < -M_PI) dyaw += 2.0 * M_PI;
