@@ -77,4 +77,11 @@
             <extra_arg name="use_intra_process_comms" value="true"/>
         </composable_node>
     </node_container>
+
+    <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py">
+        <arg name="align_depth.enable" value="true"/>
+        <arg name="rgb_camera.color_profile" value="640x480x30"/>
+        <arg name="depth_module.depth_profile" value="640x480x30"/>
+        <arg name="camera_namespace" value="sensing"/>
+     </include>
 </launch>
