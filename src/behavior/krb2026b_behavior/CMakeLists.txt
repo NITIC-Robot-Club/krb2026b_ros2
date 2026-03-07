@@ -13,4 +13,9 @@ rclcpp_components_register_node(${PROJECT_NAME}
     EXECUTABLE bottle_collector
 )
 
+rclcpp_components_register_node(${PROJECT_NAME}
+    PLUGIN "duck_collector::duck_collector"
+    EXECUTABLE duck_collector
+)
+
 ament_auto_package(USE_SCOPED_HEADER_INSTALL_DIR)

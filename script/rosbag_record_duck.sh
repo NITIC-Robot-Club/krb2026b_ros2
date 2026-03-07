@@ -1,0 +1,1 @@
+ros2 bag record /localization/current_pose /sensing/camera/aligned_depth_to_color/image_raw /sensing/camera/color/image_raw /sensing/camera/color/camera_info --compression-format zstd --compression-mode file
