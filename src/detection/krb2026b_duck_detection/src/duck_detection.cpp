@@ -19,7 +19,6 @@ duck_detection::duck_detection (const rclcpp::NodeOptions &options) : Node ("duc
     tf_buffer_   = std::make_unique<tf2_ros::Buffer> (this->get_clock ());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener> (*tf_buffer_);
 
-
     RCLCPP_INFO (get_logger (), "duck detection Node Started");
 }
 void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg) {
@@ -66,10 +65,9 @@ void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg
     float scale_x = static_cast<float> (W) / IMG_SIZE;
     float scale_y = static_cast<float> (H) / IMG_SIZE;
 
-    double use_x      = 0.0;
-    double use_y      = 0.0;
-    double use_z      = 0.0;
-    double best_score = 0.0;
+    double use_x = 0.0;
+    double use_y = 0.0;
+    double use_z = 0.0;
 
     for (int i = 0; i < num_boxes; ++i) {
         float x1    = data[i * elements + 0];
@@ -125,15 +123,13 @@ void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg
         if (depth <= 0.0) continue;
 
         // ===== 3D計算 =====
-        double z        = depth / 1000.0;  // mm → m
-        double x        = (u - cx0_) * z / fx_;
-        double y        = (v - cy0_) * z / fy_;
-        double distance = std::sqrt (x * x + y * y + z * z);
-        if (distance > best_score) {
-            best_score = distance;
-            use_x      = x;
-            use_y      = y;
-            use_z      = z;
+        double z = depth / 1000.0;  // mm → m
+        double x = (u - cx0_) * z / fx_;
+        double y = (v - cy0_) * z / fy_;
+        if (use_x == 0 || x > use_x) {
+            use_x = x;
+            use_y = y;
+            use_z = z;
         }
         // ===== 描画 =====
         cv::rectangle (frame, cv::Point (x1, y1), cv::Point (x2, y2), cv::Scalar (0, 255, 0), 2);
@@ -149,7 +145,7 @@ void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg
 
     if (use_x == 0.0 && use_y == 0.0 && use_z == 0.0) return;
     if (use_z > 5.0) return;
-    
+
     geometry_msgs::msg::PointStamped point_msg;
     point_msg.header  = msg->header;
     point_msg.point.x = use_x;
