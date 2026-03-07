@@ -9,6 +9,10 @@ bottle_detection::bottle_detection (const rclcpp::NodeOptions &node_options) : N
     exclude_footprint_y_  = this->declare_parameter<std::vector<double>> ("exclude_footprint_y", {-0.3, -0.3, 0.3, 0.3});
     cluster_dist_thresh_  = this->declare_parameter<double> ("cluster_dist_thresh", 0.1);
     cluster_min_pts_      = static_cast<int> (this->declare_parameter<int> ("cluster_min_pts", 3));
+    reverse_y_            = this->declare_parameter<bool> ("reverse_y", false);
+    reverse_y_offset_     = this->declare_parameter<double> ("reverse_y_offset", 0.0);
+    lpf_alpha_            = this->declare_parameter<double> ("lpf_alpha", 0.4);
+    lpf_match_dist_thresh_ = this->declare_parameter<double> ("lpf_match_dist_thresh", 0.15);
 
     tf_buffer_   = std::make_shared<tf2_ros::Buffer> (this->get_clock ());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener> (*tf_buffer_);
@@ -21,11 +25,19 @@ bottle_detection::bottle_detection (const rclcpp::NodeOptions &node_options) : N
     RCLCPP_INFO (this->get_logger (), "bottle_detection node has been initialized.");
     RCLCPP_INFO (this->get_logger (), "cluster_dist_thresh: %f", cluster_dist_thresh_);
     RCLCPP_INFO (this->get_logger (), "cluster_min_pts: %d", cluster_min_pts_);
+    RCLCPP_INFO (this->get_logger (), "reverse_y: %s", reverse_y_ ? "true" : "false");
+    RCLCPP_INFO (this->get_logger (), "reverse_y_offset: %f", reverse_y_offset_);
+    RCLCPP_INFO (this->get_logger (), "lpf_alpha: %f", lpf_alpha_);
+    RCLCPP_INFO (this->get_logger (), "lpf_match_dist_thresh: %f", lpf_match_dist_thresh_);
+
     for (size_t i = 0; i < detect_area_global_x_.size (); ++i) {
         RCLCPP_INFO (this->get_logger (), "detect_area_global_x[%zu]: %f", i, detect_area_global_x_[i]);
     }
     for (size_t i = 0; i < detect_area_global_y_.size (); ++i) {
         RCLCPP_INFO (this->get_logger (), "detect_area_global_y[%zu]: %f", i, detect_area_global_y_[i]);
+        if (reverse_y_) {
+            detect_area_global_y_[i] = -detect_area_global_y_[i] + reverse_y_offset_;
+        }
     }
     for (size_t i = 0; i < exclude_footprint_x_.size (); ++i) {
         RCLCPP_INFO (this->get_logger (), "exclude_footprint_x[%zu]: %f", i, exclude_footprint_x_[i]);
@@ -131,6 +143,43 @@ bottle_detection::Point2D bottle_detection::centroid (const Cluster &cluster) {
     }
     double n = static_cast<double> (cluster.size ());
     return {sx / n, sy / n};
+}
+
+std::vector<bottle_detection::Point2D> bottle_detection::low_pass_filter_centers (const std::vector<Point2D> &centers) {
+    if (centers.empty ()) {
+        previous_filtered_centers_.clear ();
+        return centers;
+    }
+
+    double alpha = std::clamp (lpf_alpha_, 0.0, 1.0);
+    std::vector<Point2D> filtered = centers;
+    std::vector<bool>    used_prev (previous_filtered_centers_.size (), false);
+
+    for (size_t i = 0; i < centers.size (); ++i) {
+        double best_dist = std::numeric_limits<double>::max ();
+        int    best_idx  = -1;
+        for (size_t j = 0; j < previous_filtered_centers_.size (); ++j) {
+            if (used_prev[j]) {
+                continue;
+            }
+            double dx   = centers[i].first - previous_filtered_centers_[j].first;
+            double dy   = centers[i].second - previous_filtered_centers_[j].second;
+            double dist = std::hypot (dx, dy);
+            if (dist < best_dist) {
+                best_dist = dist;
+                best_idx  = static_cast<int> (j);
+            }
+        }
+
+        if (best_idx >= 0 && best_dist < lpf_match_dist_thresh_) {
+            used_prev[best_idx] = true;
+            filtered[i].first   = alpha * centers[i].first + (1.0 - alpha) * previous_filtered_centers_[best_idx].first;
+            filtered[i].second  = alpha * centers[i].second + (1.0 - alpha) * previous_filtered_centers_[best_idx].second;
+        }
+    }
+
+    previous_filtered_centers_ = filtered;
+    return filtered;
 }
 
 bottle_detection::Point2D bottle_detection::compensate_center (const Point2D &center_map, const geometry_msgs::msg::TransformStamped &tf_base_to_map) {
@@ -367,6 +416,8 @@ void bottle_detection::scan_callback (const sensor_msgs::msg::LaserScan::SharedP
     for (const auto &c : clusters) {
         centers.push_back (compensate_center (centroid (c), tf_base_to_map));
     }
+
+    centers = low_pass_filter_centers (centers);
 
     auto pairs = find_pairs (centers);
     if (pairs.empty ()) {

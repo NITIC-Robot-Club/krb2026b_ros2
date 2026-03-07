@@ -8,6 +8,8 @@ bottle_collector::bottle_collector (const rclcpp::NodeOptions &node_options) : N
     offset_large_m_    = this->declare_parameter<double> ("offset_large_m", 0.42);
     y_thresh_m_        = this->declare_parameter<double> ("y_thresh_m", 0.02);
     yaw_thresh_rad_    = this->declare_parameter<double> ("yaw_thresh_deg", 3.0) * M_PI / 180.0;
+    replan_position_thresh_m_ = this->declare_parameter<double> ("replan_position_thresh_m", 0.03);
+    replan_yaw_thresh_rad_    = this->declare_parameter<double> ("replan_yaw_thresh_deg", 2.0) * M_PI / 180.0;
     double frequency   = this->declare_parameter<double> ("frequency", 100.0);
 
     tf_buffer_   = std::make_shared<tf2_ros::Buffer> (this->get_clock ());
@@ -29,6 +31,8 @@ bottle_collector::bottle_collector (const rclcpp::NodeOptions &node_options) : N
     RCLCPP_INFO (this->get_logger (), "offset_large_m: %f", offset_large_m_);
     RCLCPP_INFO (this->get_logger (), "y_thresh_m: %f", y_thresh_m_);
     RCLCPP_INFO (this->get_logger (), "yaw_thresh_deg: %f", yaw_thresh_rad_ * 180.0 / M_PI);
+    RCLCPP_INFO (this->get_logger (), "replan_position_thresh_m: %f", replan_position_thresh_m_);
+    RCLCPP_INFO (this->get_logger (), "replan_yaw_thresh_deg: %f", replan_yaw_thresh_rad_ * 180.0 / M_PI);
     RCLCPP_INFO (this->get_logger (), "frequency: %f Hz", frequency);
 }
 
@@ -36,6 +40,7 @@ void bottle_collector::state_action_callback (const natto_msgs::msg::StateAction
     if (msg->action_name == "collect_bottle") {
         pending_action_msg_ = msg;
         collecting_         = true;
+        has_last_target_    = false;
         RCLCPP_INFO (this->get_logger (), "collect_bottle: action received (state_id=%ld), waiting for timer.", msg->state_id);
     }
 }
@@ -59,6 +64,7 @@ void bottle_collector::goal_reached_callback (const std_msgs::msg::Bool::SharedP
         result.action_name = "collect_bottle";
         result.success     = true;
         collecting_        = false;
+        has_last_target_   = false;
         state_result_publisher_->publish (result);
         RCLCPP_INFO (this->get_logger (), "collect_bottle: goal reached, publishing success.");
     }
@@ -90,6 +96,16 @@ void bottle_collector::collect_bottle (const natto_msgs::msg::StateAction::Share
     double      tx_map   = target.position.x;
     double      ty_map   = target.position.y;
     double      tyaw_map = quat_to_yaw (target.orientation);
+
+    if (has_last_target_) {
+        double target_shift_m = std::hypot (tx_map - last_target_x_map_, ty_map - last_target_y_map_);
+        double target_yaw_diff = std::fabs (normalize_angle (tyaw_map - last_target_yaw_map_));
+        if (target_shift_m < replan_position_thresh_m_ && target_yaw_diff < replan_yaw_thresh_rad_) {
+            RCLCPP_DEBUG_THROTTLE (this->get_logger (), *this->get_clock (), 1000, "collect_bottle: target change is small (d=%.3f m, dyaw=%.2f deg), skipping republish.", target_shift_m,
+                                   target_yaw_diff * 180.0 / M_PI);
+            return;
+        }
+    }
 
     auto [tx_base, ty_base] = inverse_transform_point (tx_map, ty_map, tf_base_to_map);
     double robot_yaw_map    = quat_to_yaw (tf_base_to_map.transform.rotation);
@@ -127,6 +143,11 @@ void bottle_collector::collect_bottle (const natto_msgs::msg::StateAction::Share
     goal.pose.orientation.z = std::sin (goal_yaw_map * 0.5);
     goal.pose.orientation.w = std::cos (goal_yaw_map * 0.5);
     goal_pose_publisher_->publish (goal);
+
+    last_target_x_map_   = tx_map;
+    last_target_y_map_   = ty_map;
+    last_target_yaw_map_ = tyaw_map;
+    has_last_target_     = true;
 }
 
 nav_msgs::msg::Path bottle_collector::generate_path (double gx_base, double gy_base, double gyaw_base, const geometry_msgs::msg::TransformStamped &tf_base_to_map) {
@@ -161,6 +182,12 @@ nav_msgs::msg::Path bottle_collector::generate_path (double gx_base, double gy_b
 
 double bottle_collector::quat_to_yaw (const geometry_msgs::msg::Quaternion &q) {
     return std::atan2 (2.0 * (q.w * q.z), 1.0 - 2.0 * (q.z * q.z));
+}
+
+double bottle_collector::normalize_angle (double angle) {
+    while (angle > M_PI) angle -= 2.0 * M_PI;
+    while (angle < -M_PI) angle += 2.0 * M_PI;
+    return angle;
 }
 
 std::pair<double, double> bottle_collector::transform_point (double x, double y, const geometry_msgs::msg::TransformStamped &tf) {

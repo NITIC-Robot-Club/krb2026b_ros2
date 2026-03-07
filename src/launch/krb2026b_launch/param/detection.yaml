@@ -1,0 +1,16 @@
+/detection/bottle_detection:
+  ros__parameters:
+    cluster_dist_thresh: 0.3
+    cluster_min_pts: 5
+    reverse_y: false
+    reverse_y_offset: 0.0
+    lpf_alpha: 0.4
+    lpf_match_dist_thresh: 0.15
+
+/behavior/bottle_collector:
+  ros__parameters:
+    offset_normal_m: 0.35
+    offset_large_m: 0.42
+    min_start_velocity_mps: 0.1
+    replan_position_thresh_m: 0.03
+    replan_yaw_thresh_deg: 2.0
