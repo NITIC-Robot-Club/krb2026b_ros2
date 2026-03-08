@@ -7,7 +7,7 @@
     <arg name="launch_simulation" default="false"/>
     <arg name="launch_sensing" default="false"/>
     <arg name="initial_allow_auto_drive" default="true"/>
-    <arg name="state_graph_path" default="$(find-pkg-share krb2026b_launch)/state_graph/test.md"/>
+    <arg name="state_graph_path" default="$(find-pkg-share krb2026b_launch)/state_graph/duck.md"/>
 
     <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml"/>
 

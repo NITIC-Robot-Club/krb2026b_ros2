@@ -18,7 +18,7 @@
     goal_deceleration_distance_p: 2.5
     goal_position_tolerance_m: 0.05
     goal_yaw_tolerance_deg: 5.0
-    goal_speed_tolerance_xy_m_s: 0.03
+    goal_speed_tolerance_xy_m_s: 0.02
     goal_speed_tolerance_yaw_deg_s: 5.0
 
     kp_pos: 1.0
