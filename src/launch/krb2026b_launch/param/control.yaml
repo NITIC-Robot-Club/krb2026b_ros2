@@ -15,11 +15,11 @@
     min_speed_yaw_deg_s: 0.0
     max_acceleration_yaw_deg_s2: 1000.0
     goal_deceleration_m_s2: 1.0
-    goal_deceleration_distance_p: 2.0
+    goal_deceleration_distance_p: 2.5
     goal_position_tolerance_m: 0.05
     goal_yaw_tolerance_deg: 5.0
-    goal_speed_tolerance_xy_m_s: 0.05
-    goal_speed_tolerance_yaw_deg_s: 10.0
+    goal_speed_tolerance_xy_m_s: 0.03
+    goal_speed_tolerance_yaw_deg_s: 5.0
 
     kp_pos: 1.0
     ki_pos: 0.01

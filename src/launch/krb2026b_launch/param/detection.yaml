@@ -9,8 +9,7 @@
 
 /behavior/bottle_collector:
   ros__parameters:
-    offset_normal_m: 0.35
-    offset_large_m: 0.42
-    min_start_velocity_mps: 0.1
-    replan_position_thresh_m: 0.03
-    replan_yaw_thresh_deg: 2.0
+    offset_normal_m: 0.4
+    offset_large_m: 0.5
+    replan_position_thresh_m: 0.05
+    replan_yaw_thresh_deg: 10.0
