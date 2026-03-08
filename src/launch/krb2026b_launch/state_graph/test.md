@@ -9,7 +9,7 @@ stateDiagram-v2
 
 state オブジェクト01 {
     [*] --> オブジェクト01_保持準備 :  set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
-    オブジェクト01_保持準備 --> オブジェクト01_移動 : set_pose(x = 1.65, y = 0.47, yaw = 180.0)
+    オブジェクト01_保持準備 --> オブジェクト01_移動 : set_pose(x = 1.65, y = 0.5, yaw = 180.0)
     オブジェクト01_移動 --> オブジェクト01_装填 : set_joint_position(collector_arm_left = 1.9, collector_arm_right = 1.9)
     オブジェクト01_装填 --> オブジェクト01_装填完了 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
     オブジェクト01_装填完了 --> オブジェクト01_旋回 : set_pose(x = 1.5, y = 0.5, yaw = 0.0)
@@ -19,7 +19,7 @@ state オブジェクト01 {
 
 state オブジェクト23 {
     [*] --> オブジェクト23_保持準備 :  set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
-    オブジェクト23_保持準備 --> オブジェクト23_移動 : set_pose(x = 2.05, y = 0.47, yaw = 180.0)
+    オブジェクト23_保持準備 --> オブジェクト23_移動 : set_pose(x = 2.05, y = 0.5, yaw = 180.0)
     オブジェクト23_移動 --> オブジェクト23_装填 : set_joint_position(collector_arm_left = 1.9, collector_arm_right = 1.9)
     オブジェクト23_装填 --> オブジェクト23_装填完了 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
     オブジェクト23_装填完了 --> オブジェクト23_旋回 : set_pose(x = 1.9, y = 0.5, yaw = 0.0)
@@ -29,7 +29,7 @@ state オブジェクト23 {
 
 state オブジェクト45 {
     [*] --> オブジェクト45_保持準備 :  set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
-    オブジェクト45_保持準備 --> オブジェクト45_移動 : set_pose(x = 2.45, y = 0.47, yaw = 180.0)
+    オブジェクト45_保持準備 --> オブジェクト45_移動 : set_pose(x = 2.45, y = 0.5, yaw = 180.0)
     オブジェクト45_移動 --> オブジェクト45_装填 : set_joint_position(collector_arm_left = 1.9, collector_arm_right = 1.9)
     オブジェクト45_装填 --> オブジェクト45_装填完了 : set_joint_position(collector_arm_left = 0.0, collector_arm_right = 0.0)
     オブジェクト45_装填完了 --> オブジェクト45_旋回 : set_pose(x = 2.3, y = 0.5, yaw = 0.0)
@@ -38,12 +38,12 @@ state オブジェクト45 {
 }
 
 state アヒル {
-    [*] --> アヒル前移動 : set_pose(x = 2.66, y = 1.77)
-    アヒル前移動 --> アヒル回収 : set_joint_position(helper = 1.4)
-    アヒル回収 --> アヒル押し込み : set_pose(x = 2.75, y = 1.77)
+    [*] --> アヒル前移動 : set_pose(x = 2.65, y = 1.8, yaw = 0.0)
+    アヒル前移動 --> アヒル回収 : set_joint_position(helper = 1.3)
+    アヒル回収 --> アヒル押し込み : set_pose(x = 2.78)
     アヒル押し込み --> アヒル回収完了 : set_joint_position(helper = 0.0)
     アヒル回収完了 --> アヒル帰還 : set_pose(x = 1.5, y = 0.5, yaw = 180.0)
-    アヒル帰還 --> アヒル開放 : set_joint_position(helper = 1.57)
+    アヒル帰還 --> アヒル開放 : set_joint_position(helper = 1.5)
     アヒル開放 --> [*] : set_joint_position(helper = 0.0)
 }
 ```

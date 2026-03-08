@@ -38,7 +38,7 @@
       control_mode: ["position", "position", "position"]
       ratio: [-36.0, 36.0, -36.0]
       origin_get_mode: ["limit_switch", "limit_switch", "limit_switch"]
-      origin_target: [1500, -1500, 0]
+      origin_target: [1500, -1500, 1000]
       position_offset: [0.0, 0.0, 0.0]
       origin_id: [0, 1, 2]
       max_position: [0.0, 0.0, 0.0]
