@@ -16,7 +16,7 @@ class duck_collector : public rclcpp::Node {
 
    private:
     void currentPoseCallback (const geometry_msgs::msg::PoseStamped::SharedPtr msg);
-    void planningPath (geometry_msgs::msg::PoseStamped goal_pose);
+    void planningPath (geometry_msgs::msg::PoseStamped goal_pose, bool force_replan);
     void timerCallback ();
     void mapPointCallback (const geometry_msgs::msg::PointStamped::SharedPtr msg);
     void stateActionCallback (const natto_msgs::msg::StateAction::SharedPtr msg);
@@ -41,6 +41,13 @@ class duck_collector : public rclcpp::Node {
 
     double x_offset_;
     double y_offset_;
+    double filter_gain_;
+    double goal_dist_threshold_ = 0.1;  // 目標が前回の目標と近すぎる場合の距離閾値
+
+    double prev_goal_x_;
+    double prev_goal_y_;
+    double path_goal_x_;
+    double path_goal_y_;
 
     double quat_to_yaw (const geometry_msgs::msg::Quaternion &q) {
         return std::atan2 (2.0 * (q.w * q.z), 1.0 - 2.0 * (q.z * q.z));

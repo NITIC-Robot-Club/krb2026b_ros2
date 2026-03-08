@@ -2,8 +2,10 @@
 
 namespace duck_collector {
 duck_collector::duck_collector (const rclcpp::NodeOptions &options) : Node ("duck_collector", options) {
-    x_offset_ = this->declare_parameter<double> ("x_offset_m", -0.9);
-    y_offset_ = this->declare_parameter<double> ("y_offset_m", 0.05);
+    x_offset_            = this->declare_parameter<double> ("x_offset_m", -0.9);
+    y_offset_            = this->declare_parameter<double> ("y_offset_m", 0.05);
+    filter_gain_         = this->declare_parameter<double> ("filter_gain", 0.5);
+    goal_dist_threshold_ = this->declare_parameter<double> ("goal_dist_threshold", 0.1);
 
     path_pub_         = create_publisher<nav_msgs::msg::Path> ("/planning/path", 10);
     state_result_pub_ = create_publisher<natto_msgs::msg::StateResult> ("state_result", 10);
@@ -15,6 +17,10 @@ duck_collector::duck_collector (const rclcpp::NodeOptions &options) : Node ("duc
 
     timer_ = this->create_wall_timer (std::chrono::milliseconds (100), std::bind (&duck_collector::timerCallback, this));
 
+    prev_goal_x_ = 0.0;
+    prev_goal_y_ = 0.0;
+    path_goal_x_ = 0.0;
+    path_goal_y_ = 0.0;
     RCLCPP_INFO (get_logger (), "duck collector Node Started");
 }
 void duck_collector::stateActionCallback (const natto_msgs::msg::StateAction::SharedPtr msg) {
@@ -22,6 +28,22 @@ void duck_collector::stateActionCallback (const natto_msgs::msg::StateAction::Sh
         pending_action_msg_ = msg;
         collecting_         = true;
         RCLCPP_INFO (get_logger (), "collect_duck: action received (state_id=%ld), waiting for timer.", msg->state_id);
+
+        if (map_point.point.x == 0.0 && map_point.point.y == 0.0 && map_point.point.z == 0.0) return;
+        geometry_msgs::msg::PoseStamped goal_pose;
+        goal_pose.header.stamp    = this->now ();
+        goal_pose.header.frame_id = "map";
+
+        goal_pose.pose.position.x = map_point.point.x + x_offset_;
+        goal_pose.pose.position.y = map_point.point.y + y_offset_;
+        goal_pose.pose.position.z = 0.0;
+
+        goal_pose.pose.orientation.x = 0.0;
+        goal_pose.pose.orientation.y = 0.0;
+        goal_pose.pose.orientation.z = 0.0;
+        goal_pose.pose.orientation.w = 1.0;
+
+        planningPath (goal_pose, true);
     }
 }
 
@@ -49,15 +71,24 @@ void duck_collector::timerCallback () {
     goal_pose.pose.position.y = map_point.point.y + y_offset_;
     goal_pose.pose.position.z = 0.0;
 
+    if (prev_goal_x_ != 0.0) goal_pose.pose.position.x = filter_gain_ * goal_pose.pose.position.x + (1.0 - filter_gain_) * prev_goal_x_;
+    if (prev_goal_y_ != 0.0) goal_pose.pose.position.y = filter_gain_ * goal_pose.pose.position.y + (1.0 - filter_gain_) * prev_goal_y_;
+
+    prev_goal_x_ = goal_pose.pose.position.x;
+    prev_goal_y_ = goal_pose.pose.position.y;
+
     goal_pose.pose.orientation.x = 0.0;
     goal_pose.pose.orientation.y = 0.0;
     goal_pose.pose.orientation.z = 0.0;
     goal_pose.pose.orientation.w = 1.0;
 
-    planningPath (goal_pose);
+    planningPath (goal_pose, false);
 }
-void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
+void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose, bool force_replan) {
     if (current_pose_.pose.position.x == 0.0 && current_pose_.pose.position.y == 0.0 && current_pose_.pose.position.z == 0.0) return;
+
+    double dist_to_prev_goal = std::hypot (goal_pose.pose.position.x - path_goal_x_, goal_pose.pose.position.y - path_goal_y_);
+    if (!force_replan && dist_to_prev_goal < goal_dist_threshold_) return;  // 目標が前回の目標と近すぎる場合は再計画しない
 
     nav_msgs::msg::Path path;
     path.header.stamp    = this->now ();
@@ -106,6 +137,9 @@ void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
     }
 
     path_pub_->publish (path);
+
+    path_goal_x_ = goal_pose.pose.position.x;
+    path_goal_y_ = goal_pose.pose.position.y;
 }
 void duck_collector::currentPoseCallback (const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
     current_pose_ = *msg;
