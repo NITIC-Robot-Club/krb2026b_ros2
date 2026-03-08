@@ -20,3 +20,4 @@
       collector_arm_right: 0.1
       collector_hand_left: 0.1
       collector_hand_right: 0.1
+      helper: 0.1
