@@ -158,6 +158,7 @@ void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg
         RCLCPP_WARN (this->get_logger (), "%s", ex.what ());
         return;
     }
+    if (map_point.point.x < 3.0 || map_point.point.x > 4.0) return;
     point_pub_->publish (map_point);
 }
 void duck_detection::cameraInfoCallback (const sensor_msgs::msg::CameraInfo::SharedPtr msg) {
