@@ -3,13 +3,15 @@
     <arg name="publish_map" default="true"/>
     <arg name="launch_localization" default="true"/>
     <arg name="use_laserscan_convert" default="true"/>
-    <arg name="use_ransac" default="true"/>
+    <arg name="use_ransac" default="false"/>
     <arg name="use_odom_tf" default="false"/>
     <arg name="occupancy_grid_resolution" default="0.02"/>
     <arg name="merged_lidar_publish_frequency" default="100.0"/>
     <arg name="initial_allow_auto_drive" default="true"/>
-    <arg name="controller_max_xy_speed_m_s" default="7.0"/>
-    <arg name="controller_max_yaw_speed_rad_s" default="20.0"/>
+    <arg name="controller_max_xy_speed_m_s" default="0.5"/>
+    <arg name="controller_max_yaw_speed_rad_s" default="1.0"/>
+    <arg name="reverse_y" default="false"/>
+    <arg name="reverse_y_offset" default="0.0"/>
 
     <arg name="urdf_path" default="$(find-pkg-share krb2026b_launch)/urdf/krb2026b.urdf.xacro"/>
     <arg name="chassis_param_path" default="$(find-pkg-share krb2026b_launch)/config/robot.yaml"/>

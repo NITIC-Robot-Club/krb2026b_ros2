@@ -44,6 +44,13 @@ class bottle_collector : public rclcpp::Node {
     double offset_large_m_;
     double y_thresh_m_;
     double yaw_thresh_rad_;
+    double replan_position_thresh_m_;
+    double replan_yaw_thresh_rad_;
+
+    bool   has_last_target_{false};
+    double last_target_x_map_{0.0};
+    double last_target_y_map_{0.0};
+    double last_target_yaw_map_{0.0};
 
     void state_action_callback (const natto_msgs::msg::StateAction::SharedPtr msg);
     void bottle_pairs_callback (const geometry_msgs::msg::PoseArray::SharedPtr msg);
@@ -54,6 +61,7 @@ class bottle_collector : public rclcpp::Node {
 
     nav_msgs::msg::Path generate_path (double gx_base, double gy_base, double gyaw_base, const geometry_msgs::msg::TransformStamped &tf_base_to_map);
 
+    double                    normalize_angle (double angle);
     double                    quat_to_yaw (const geometry_msgs::msg::Quaternion &q);
     std::pair<double, double> transform_point (double x, double y, const geometry_msgs::msg::TransformStamped &tf);
     std::pair<double, double> inverse_transform_point (double x, double y, const geometry_msgs::msg::TransformStamped &tf);

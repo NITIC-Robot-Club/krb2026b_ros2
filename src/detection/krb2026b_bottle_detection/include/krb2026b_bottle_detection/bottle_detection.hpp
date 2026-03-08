@@ -29,6 +29,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <utility>
 #include <vector>
 
@@ -46,16 +47,23 @@ class bottle_detection : public rclcpp::Node {
     static constexpr double PAIR_DX_MAX   = 0.1;
     static constexpr double YAW_OFFSET    = -M_PI / 2.0;
 
+        using Point2D    = std::pair<double, double>;
+        using Cluster    = std::vector<Point2D>;
+        using BottlePair = std::pair<Point2D, Point2D>;
+
     std::vector<double> detect_area_global_x_;
     std::vector<double> detect_area_global_y_;
     std::vector<double> exclude_footprint_x_;
     std::vector<double> exclude_footprint_y_;
     double              cluster_dist_thresh_;
     int                 cluster_min_pts_;
-    void                scan_callback (const sensor_msgs::msg::LaserScan::SharedPtr msg);
-    using Point2D    = std::pair<double, double>;
-    using Cluster    = std::vector<Point2D>;
-    using BottlePair = std::pair<Point2D, Point2D>;
+    bool                reverse_y_;
+    double              reverse_y_offset_;
+    double              lpf_alpha_;
+    double              lpf_match_dist_thresh_;
+    std::vector<Point2D> previous_filtered_centers_;
+
+    void scan_callback (const sensor_msgs::msg::LaserScan::SharedPtr msg);
 
     double  quat_to_yaw (const geometry_msgs::msg::Quaternion &q);
     Point2D transform_point (double x, double y, const geometry_msgs::msg::TransformStamped &tf);
@@ -66,6 +74,8 @@ class bottle_detection : public rclcpp::Node {
     std::vector<Cluster> cluster_points (const std::vector<Point2D> &points);
 
     Point2D centroid (const Cluster &cluster);
+
+    std::vector<Point2D> low_pass_filter_centers (const std::vector<Point2D> &centers);
 
     Point2D                 compensate_center (const Point2D &center_map, const geometry_msgs::msg::TransformStamped &tf_base_to_map);
     std::vector<BottlePair> find_pairs (const std::vector<Point2D> &centers);

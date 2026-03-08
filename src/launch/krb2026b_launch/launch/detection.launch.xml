@@ -1,12 +1,14 @@
 <launch>
     <arg name="model_path" default="$(find-pkg-share krb2026b_launch)/model/best_int8_openvino_model/best.xml"/>
+    <arg name="detection_param_path" default="$(find-pkg-share krb2026b_launch)/param/detection.yaml"/>
 
     <node_container pkg="rclcpp_components" exec="component_container" name="detection_container" namespace="/detection">
         <!-- bottle detection -->
         <composable_node pkg="krb2026b_bottle_detection" plugin="bottle_detection::bottle_detection" name="bottle_detection" namespace="/detection">
             <remap from="laserscan" to="/sensing/lidar/laserscan/rear"/>
-            <param name="cluster_dist_thresh" value="0.3"/>
-            <param name="cluster_min_pts" value="5"/>
+            <param from="$(var detection_param_path)"/>
+            <param name="reverse_y" value="$(var reverse_y)"/>
+            <param name="reverse_y_offset" value="$(var reverse_y_offset)"/>
         </composable_node>
 
         <!-- bottle collector -->
@@ -14,9 +16,7 @@
             <remap from="path" to="/planning/path"/>
             <remap from="bottle_pairs" to="/detection/bottle_pairs"/>
             <remap from="goal_reached" to="/control/dynamic/goal_reached"/>
-            <param name="offset_normal_m" value="0.3"/>
-            <param name="offset_large_m" value="0.4"/>
-            <param name="min_start_velocity_mps" value="0.1"/>
+            <param from="$(var detection_param_path)"/>
         </composable_node>
 
         <composable_node pkg="krb2026b_duck_detection" plugin="duck_detection::duck_detection" name="duck_detection" namespace="/detection">

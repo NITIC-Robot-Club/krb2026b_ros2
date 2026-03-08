@@ -11,7 +11,7 @@
 
     <include file="$(find-pkg-share krb2026b_launch)/launch/krb2026b.launch.xml"/>
 
-    <node_container pkg="rclcpp_components" exec="component_container" name="cantest_container" namespace="/can">
+    <node_container pkg="rclcpp_components" exec="component_container" name="can_container" namespace="/can">
         <composable_node pkg="natto_canable" plugin="canable::canable" name="canable">
             <param name="use_fd" value="true"/>
             <remap from="transmit" to="/can/transmit"/>
