@@ -1,6 +1,6 @@
 <launch>
     <arg name="reverse_y" default="true"/>
-    <arg name="reverse_y_offset" default="2.5"/>
+    <arg name="reverse_y_offset" default="3.5"/>
 
     <include file="$(find-pkg-share krb2026b_launch)/launch/real.launch.xml"/>
 </launch>

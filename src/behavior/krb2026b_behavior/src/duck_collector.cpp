@@ -10,17 +10,20 @@ duck_collector::duck_collector (const rclcpp::NodeOptions &options) : Node ("duc
     path_pub_         = create_publisher<nav_msgs::msg::Path> ("/planning/path", 10);
     state_result_pub_ = create_publisher<natto_msgs::msg::StateResult> ("state_result", 10);
 
-    current_pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped> ("/localization/current_pose", 10, std::bind (&duck_collector::currentPoseCallback, this, std::placeholders::_1));
-    map_point_sub_    = create_subscription<geometry_msgs::msg::PointStamped> ("/detection/duck_position", 10, std::bind (&duck_collector::mapPointCallback, this, std::placeholders::_1));
+    current_pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped> ("/localization/current_pose", 1, std::bind (&duck_collector::currentPoseCallback, this, std::placeholders::_1));
+    map_point_sub_    = create_subscription<geometry_msgs::msg::PointStamped> ("/detection/duck_position", 1, std::bind (&duck_collector::mapPointCallback, this, std::placeholders::_1));
     state_action_sub_ = create_subscription<natto_msgs::msg::StateAction> ("state_action", 10, std::bind (&duck_collector::stateActionCallback, this, std::placeholders::_1));
-    goal_reached_sub_ = create_subscription<std_msgs::msg::Bool> ("goal_reached", 10, std::bind (&duck_collector::goalReachedCallback, this, std::placeholders::_1));
+    goal_reached_sub_ = create_subscription<std_msgs::msg::Bool> ("goal_reached", 1, std::bind (&duck_collector::goalReachedCallback, this, std::placeholders::_1));
 
-    timer_ = this->create_wall_timer (std::chrono::milliseconds (100), std::bind (&duck_collector::timerCallback, this));
+    // timer_ = this->create_wall_timer (std::chrono::milliseconds (100), std::bind (&duck_collector::timerCallback, this));
 
     prev_goal_x_ = 0.0;
     prev_goal_y_ = 0.0;
     path_goal_x_ = 0.0;
     path_goal_y_ = 0.0;
+
+    RCLCPP_INFO (this->get_logger (), "x_offset: %f", x_offset_);
+    RCLCPP_INFO (this->get_logger (), "y_offset: %f", y_offset_);
     RCLCPP_INFO (get_logger (), "duck collector Node Started");
 }
 void duck_collector::stateActionCallback (const natto_msgs::msg::StateAction::SharedPtr msg) {
@@ -48,16 +51,19 @@ void duck_collector::stateActionCallback (const natto_msgs::msg::StateAction::Sh
 }
 
 void duck_collector::goalReachedCallback (const std_msgs::msg::Bool::SharedPtr msg) {
+    RCLCPP_INFO(this->get_logger(), "goal reached %d, collecting %d", msg->data, collecting_);
     if (!collecting_) return;
-    if (msg->data) {
-        natto_msgs::msg::StateResult result;
+    natto_msgs::msg::StateResult result;
+    if(pending_action_msg_) {
         result.state_id    = pending_action_msg_->state_id;
-        result.action_name = "collect_duck";
-        result.success     = true;
-        collecting_        = false;
-        state_result_pub_->publish (result);
-        RCLCPP_INFO (get_logger (), "collect_duck: goal reached, publishing success.");
     }
+    result.action_name = "collect_duck";
+    result.success     = msg->data;
+    collecting_        = !msg->data;
+    state_result_pub_->publish (result);
+    // if (msg->data) {
+    //     RCLCPP_INFO (get_logger (), "collect_duck: goal reached, publishing success.");
+    // }
 }
 
 void duck_collector::timerCallback () {
