@@ -8,8 +8,8 @@
     <arg name="occupancy_grid_resolution" default="0.02"/>
     <arg name="merged_lidar_publish_frequency" default="100.0"/>
     <arg name="initial_allow_auto_drive" default="true"/>
-    <arg name="controller_max_xy_speed_m_s" default="0.5"/>
-    <arg name="controller_max_yaw_speed_rad_s" default="1.0"/>
+    <arg name="controller_max_xy_speed_m_s" default="1.0"/>
+    <arg name="controller_max_yaw_speed_rad_s" default="3.0"/>
     <arg name="reverse_y" default="false"/>
     <arg name="reverse_y_offset" default="0.0"/>
 
