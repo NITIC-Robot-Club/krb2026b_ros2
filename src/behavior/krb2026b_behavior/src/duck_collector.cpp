@@ -55,11 +55,12 @@ void duck_collector::stateActionCallback (const natto_msgs::msg::StateAction::Sh
         goal_pose.pose.orientation.w = 1.0;
 
         planningPath (goal_pose);
+    } else {
+        collecting_ = false;
     }
 }
 
 void duck_collector::goalReachedCallback (const std_msgs::msg::Bool::SharedPtr msg) {
-    RCLCPP_INFO (this->get_logger (), "goal reached %d, collecting %d", msg->data, collecting_);
     if (!collecting_) return;
     natto_msgs::msg::StateResult result;
     if (pending_action_msg_) {
