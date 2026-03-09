@@ -15,6 +15,6 @@
     normal_noise_position : 0.01
     normal_noise_orientation_deg : 0.1
     expansion_radius_position: 0.1
-    expansion_radius_orientation_deg: 90.0
+    expansion_radius_orientation_deg: 10.0
     laser_likelihood_max_dist: 0.1
     transform_tolerance: 0.0

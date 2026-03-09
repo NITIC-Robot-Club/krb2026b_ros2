@@ -126,7 +126,7 @@ void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg
         double z = depth / 1000.0;  // mm → m
         double x = (u - cx0_) * z / fx_;
         double y = (v - cy0_) * z / fy_;
-        if (use_x == 0 || x > use_x) {
+        if (use_x == 0 || x < use_x) {
             use_x = x;
             use_y = y;
             use_z = z;
