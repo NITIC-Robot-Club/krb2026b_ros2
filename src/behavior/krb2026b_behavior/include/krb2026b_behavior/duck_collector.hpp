@@ -9,6 +9,10 @@
 #include <nav_msgs/msg/path.hpp>
 #include <std_msgs/msg/bool.hpp>
 
+#include <algorithm>
+#include <deque>
+#include <vector>
+
 namespace duck_collector {
 class duck_collector : public rclcpp::Node {
    public:
@@ -16,7 +20,7 @@ class duck_collector : public rclcpp::Node {
 
    private:
     void currentPoseCallback (const geometry_msgs::msg::PoseStamped::SharedPtr msg);
-    void planningPath (geometry_msgs::msg::PoseStamped goal_pose, bool force_replan);
+    void planningPath (geometry_msgs::msg::PoseStamped goal_pose);
     void timerCallback ();
     void mapPointCallback (const geometry_msgs::msg::PointStamped::SharedPtr msg);
     void stateActionCallback (const natto_msgs::msg::StateAction::SharedPtr msg);
@@ -48,6 +52,9 @@ class duck_collector : public rclcpp::Node {
     double prev_goal_y_;
     double path_goal_x_;
     double path_goal_y_;
+
+    std::deque<double> x_buffer_;
+    std::deque<double> y_buffer_;
 
     double quat_to_yaw (const geometry_msgs::msg::Quaternion &q) {
         return std::atan2 (2.0 * (q.w * q.z), 1.0 - 2.0 * (q.z * q.z));

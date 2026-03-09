@@ -37,8 +37,16 @@ void duck_collector::stateActionCallback (const natto_msgs::msg::StateAction::Sh
         goal_pose.header.stamp    = this->now ();
         goal_pose.header.frame_id = "map";
 
-        goal_pose.pose.position.x = map_point.point.x + x_offset_;
-        goal_pose.pose.position.y = map_point.point.y + y_offset_;
+        if (x_buffer_.empty () || y_buffer_.empty ()) return;
+        std::vector<double> x_vec (x_buffer_.begin (), x_buffer_.end ());
+        std::vector<double> y_vec (y_buffer_.begin (), y_buffer_.end ());
+        auto                mid_x = x_vec.begin () + x_vec.size () / 2;
+        auto                mid_y = y_vec.begin () + y_vec.size () / 2;
+        std::nth_element (x_vec.begin (), mid_x, x_vec.end ());
+        std::nth_element (y_vec.begin (), mid_y, y_vec.end ());
+
+        goal_pose.pose.position.x = *mid_x + x_offset_;
+        goal_pose.pose.position.y = *mid_y + y_offset_;
         goal_pose.pose.position.z = 0.0;
 
         goal_pose.pose.orientation.x = 0.0;
@@ -46,55 +54,25 @@ void duck_collector::stateActionCallback (const natto_msgs::msg::StateAction::Sh
         goal_pose.pose.orientation.z = 0.0;
         goal_pose.pose.orientation.w = 1.0;
 
-        planningPath (goal_pose, true);
+        planningPath (goal_pose);
     }
 }
 
 void duck_collector::goalReachedCallback (const std_msgs::msg::Bool::SharedPtr msg) {
-    RCLCPP_INFO(this->get_logger(), "goal reached %d, collecting %d", msg->data, collecting_);
+    RCLCPP_INFO (this->get_logger (), "goal reached %d, collecting %d", msg->data, collecting_);
     if (!collecting_) return;
     natto_msgs::msg::StateResult result;
-    if(pending_action_msg_) {
-        result.state_id    = pending_action_msg_->state_id;
+    if (pending_action_msg_) {
+        result.state_id = pending_action_msg_->state_id;
     }
     result.action_name = "collect_duck";
     result.success     = msg->data;
     collecting_        = !msg->data;
     state_result_pub_->publish (result);
-    // if (msg->data) {
-    //     RCLCPP_INFO (get_logger (), "collect_duck: goal reached, publishing success.");
-    // }
 }
 
-void duck_collector::timerCallback () {
-    if (!collecting_) return;
-    if (map_point.point.x == 0.0 && map_point.point.y == 0.0 && map_point.point.z == 0.0) return;
-    geometry_msgs::msg::PoseStamped goal_pose;
-    goal_pose.header.stamp    = this->now ();
-    goal_pose.header.frame_id = "map";
-
-    goal_pose.pose.position.x = map_point.point.x + x_offset_;
-    goal_pose.pose.position.y = map_point.point.y + y_offset_;
-    goal_pose.pose.position.z = 0.0;
-
-    if (prev_goal_x_ != 0.0) goal_pose.pose.position.x = filter_gain_ * goal_pose.pose.position.x + (1.0 - filter_gain_) * prev_goal_x_;
-    if (prev_goal_y_ != 0.0) goal_pose.pose.position.y = filter_gain_ * goal_pose.pose.position.y + (1.0 - filter_gain_) * prev_goal_y_;
-
-    prev_goal_x_ = goal_pose.pose.position.x;
-    prev_goal_y_ = goal_pose.pose.position.y;
-
-    goal_pose.pose.orientation.x = 0.0;
-    goal_pose.pose.orientation.y = 0.0;
-    goal_pose.pose.orientation.z = 0.0;
-    goal_pose.pose.orientation.w = 1.0;
-
-    planningPath (goal_pose, false);
-}
-void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose, bool force_replan) {
+void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
     if (current_pose_.pose.position.x == 0.0 && current_pose_.pose.position.y == 0.0 && current_pose_.pose.position.z == 0.0) return;
-
-    double dist_to_prev_goal = std::hypot (goal_pose.pose.position.x - path_goal_x_, goal_pose.pose.position.y - path_goal_y_);
-    if (!force_replan && dist_to_prev_goal < goal_dist_threshold_) return;  // 目標が前回の目標と近すぎる場合は再計画しない
 
     nav_msgs::msg::Path path;
     path.header.stamp    = this->now ();
@@ -152,6 +130,11 @@ void duck_collector::currentPoseCallback (const geometry_msgs::msg::PoseStamped:
 }
 void duck_collector::mapPointCallback (const geometry_msgs::msg::PointStamped::SharedPtr msg) {
     map_point = *msg;
+
+    x_buffer_.push_back (map_point.point.x);
+    y_buffer_.push_back (map_point.point.y);
+    if (x_buffer_.size () > 10) x_buffer_.pop_front ();
+    if (y_buffer_.size () > 10) y_buffer_.pop_front ();
 }
 }  // namespace duck_collector
 
