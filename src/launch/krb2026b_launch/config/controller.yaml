@@ -9,7 +9,7 @@
       mode: "toggle_on"
     button_2:
       function: "allow_auto_drive"
-      mode: "hold"
+      mode: "toggle"
     button_3:
       function: "joint_speed"
       mode: "hold"
@@ -36,7 +36,7 @@
       function: "joint_position"
       mode: "hold"
       joint_name: "helper"
-      position_on  : 1.3
+      position_on  : 1.7
       position_off : 0.0 
     button_13:
       function: "get_origin"
