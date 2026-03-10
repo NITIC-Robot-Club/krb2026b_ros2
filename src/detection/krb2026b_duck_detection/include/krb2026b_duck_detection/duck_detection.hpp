@@ -53,6 +53,8 @@ class duck_detection : public rclcpp::Node {
     const int   IMG_SIZE   = 320;
     const float CONF_THRES = 0.4f;
 
+    bool reverse_y_;
+
     geometry_msgs::msg::PointStamped map_point;
 
     double quat_to_yaw (const geometry_msgs::msg::Quaternion &q) {

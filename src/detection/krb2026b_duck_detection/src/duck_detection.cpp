@@ -3,12 +3,13 @@
 namespace duck_detection {
 duck_detection::duck_detection (const rclcpp::NodeOptions &options) : Node ("duck_detection", options), cam_info_ready_ (false) {
     this->declare_parameter<std::string> ("model_path", "last_int8_openvino_model/last.xml");
+    reverse_y_             = this->declare_parameter<bool> ("reverse_y", false);
 
     std::string model_path = this->get_parameter ("model_path").as_string ();
-    ov::Core    core;
-    auto        model = core.read_model (model_path);
-    compiled_model_   = core.compile_model (model, "CPU");
-    output_layer_     = compiled_model_.output (0);
+    ov::Core core;
+    auto     model  = core.read_model (model_path);
+    compiled_model_ = core.compile_model (model, "CPU");
+    output_layer_   = compiled_model_.output (0);
 
     image_pub_ = create_publisher<sensor_msgs::msg::Image> ("duck_bbox_image", 10);
     point_pub_ = create_publisher<geometry_msgs::msg::PointStamped> ("duck_position", 10);
@@ -126,7 +127,15 @@ void duck_detection::colorCallback (const sensor_msgs::msg::Image::SharedPtr msg
         double z = depth / 1000.0;  // mm → m
         double x = (u - cx0_) * z / fx_;
         double y = (v - cy0_) * z / fy_;
-        if (use_x == 0 || x < use_x) {
+        bool target = false;
+        if (reverse_y_) {
+            if(use_x > x) {
+                target = true;
+            }
+        } else if(use_x < x) {
+            target = true;
+        }
+        if (use_x == 0 || target) {
             use_x = x;
             use_y = y;
             use_z = z;
