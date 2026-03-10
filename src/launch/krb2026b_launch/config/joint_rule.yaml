@@ -4,14 +4,14 @@
       rule_0:
         if_0:
           joint_name: "collector_arm_left"
-          range: [0.01, 1.3]
+          range: [0.01, 1.65]
         then:
           joint_name: "collector_hand_left"
           range: [1.7, 1.7]
       rule_1:
         if_0:
           joint_name: "collector_arm_right"
-          range: [0.01, 1.3]
+          range: [0.01, 1.65]
         then:
           joint_name: "collector_hand_right"
           range: [1.7, 1.7]
