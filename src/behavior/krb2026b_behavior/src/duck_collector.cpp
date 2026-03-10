@@ -7,7 +7,7 @@ duck_collector::duck_collector (const rclcpp::NodeOptions &options) : Node ("duc
     filter_gain_         = this->declare_parameter<double> ("filter_gain", 0.5);
     goal_dist_threshold_ = this->declare_parameter<double> ("goal_dist_threshold", 0.1);
 
-    path_pub_         = create_publisher<nav_msgs::msg::Path> ("/planning/path", 10);
+    goal_pose_pub_    = create_publisher<geometry_msgs::msg::PoseStamped> ("goal_pose", 10);
     state_result_pub_ = create_publisher<natto_msgs::msg::StateResult> ("state_result", 10);
 
     current_pose_sub_ = create_subscription<geometry_msgs::msg::PoseStamped> ("/localization/current_pose", 1, std::bind (&duck_collector::currentPoseCallback, this, std::placeholders::_1));
@@ -54,7 +54,7 @@ void duck_collector::stateActionCallback (const natto_msgs::msg::StateAction::Sh
         goal_pose.pose.orientation.z = 0.0;
         goal_pose.pose.orientation.w = 1.0;
 
-        planningPath (goal_pose);
+        goal_pose_pub_->publish(goal_pose);
     } else {
         collecting_ = false;
     }
@@ -70,61 +70,6 @@ void duck_collector::goalReachedCallback (const std_msgs::msg::Bool::SharedPtr m
     result.success     = msg->data;
     collecting_        = !msg->data;
     state_result_pub_->publish (result);
-}
-
-void duck_collector::planningPath (geometry_msgs::msg::PoseStamped goal_pose) {
-    if (current_pose_.pose.position.x == 0.0 && current_pose_.pose.position.y == 0.0 && current_pose_.pose.position.z == 0.0) return;
-
-    nav_msgs::msg::Path path;
-    path.header.stamp    = this->now ();
-    path.header.frame_id = "map";
-
-    double current_x   = current_pose_.pose.position.x;
-    double current_y   = current_pose_.pose.position.y;
-    double current_yaw = quat_to_yaw (current_pose_.pose.orientation);
-
-    double goal_x   = goal_pose.pose.position.x;
-    double goal_y   = goal_pose.pose.position.y;
-    double goal_yaw = quat_to_yaw (goal_pose.pose.orientation);
-
-    double dx   = goal_x - current_x;
-    double dy   = goal_y - current_y;
-    double dyaw = goal_yaw - current_yaw;
-
-    while (dyaw > M_PI) dyaw -= 2.0 * M_PI;
-    while (dyaw < -M_PI) dyaw += 2.0 * M_PI;
-
-    double total_dist = std::hypot (dx, dy);
-    double step       = 0.05;
-
-    int N = std::max (2, static_cast<int> (total_dist / step));
-
-    for (int i = 0; i <= N; i++) {
-        double s = static_cast<double> (i) / N;
-
-        // ===== 同時補間 =====
-        double x   = current_x + s * dx;
-        double y   = current_y + s * dy;
-        double yaw = current_yaw + s * dyaw;
-
-        // ===== Pose =====
-        geometry_msgs::msg::PoseStamped pose;
-        pose.header             = path.header;
-        pose.pose.position.x    = x;
-        pose.pose.position.y    = y;
-        pose.pose.position.z    = 0.0;
-        pose.pose.orientation.x = 0.0;
-        pose.pose.orientation.y = 0.0;
-        pose.pose.orientation.z = std::sin (yaw * 0.5);
-        pose.pose.orientation.w = std::cos (yaw * 0.5);
-
-        path.poses.push_back (pose);
-    }
-
-    path_pub_->publish (path);
-
-    path_goal_x_ = goal_pose.pose.position.x;
-    path_goal_y_ = goal_pose.pose.position.y;
 }
 void duck_collector::currentPoseCallback (const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
     current_pose_ = *msg;

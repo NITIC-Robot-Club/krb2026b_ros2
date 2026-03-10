@@ -6,7 +6,7 @@
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <natto_msgs/msg/state_action.hpp>
 #include <natto_msgs/msg/state_result.hpp>
-#include <nav_msgs/msg/path.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <std_msgs/msg/bool.hpp>
 
 #include <algorithm>
@@ -20,7 +20,6 @@ class duck_collector : public rclcpp::Node {
 
    private:
     void currentPoseCallback (const geometry_msgs::msg::PoseStamped::SharedPtr msg);
-    void planningPath (geometry_msgs::msg::PoseStamped goal_pose);
     void timerCallback ();
     void mapPointCallback (const geometry_msgs::msg::PointStamped::SharedPtr msg);
     void stateActionCallback (const natto_msgs::msg::StateAction::SharedPtr msg);
@@ -33,7 +32,7 @@ class duck_collector : public rclcpp::Node {
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr              goal_reached_sub_;
 
     // Publishers
-    rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr          path_pub_;
+    rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_pub_;
     rclcpp::Publisher<natto_msgs::msg::StateResult>::SharedPtr state_result_pub_;
 
     rclcpp::TimerBase::SharedPtr timer_;
