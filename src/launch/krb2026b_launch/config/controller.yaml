@@ -52,7 +52,7 @@
       function: "joint_position"
       mode: "hold"
       joint_name: "helper"
-      position_on  : 1.7
+      position_on  : 1.5
       position_off : 0.0
     zl:
       function: "joint_position"
