@@ -14,13 +14,14 @@
       function: "joint_speed"
       mode: "hold"
       joint_name: "belt_launcher"
-      speed_on: 150.0
+      speed_on: 1600.0
       speed_off: 0.0
+      priority: 0
     button_9:
       function: "joint_position"
       mode: "hold"
       joint_name: "collector_hand_left"
-      position_on: 1.7    # ボタン押している間開く　逆だと事故る
+      position_on: 1.7 
       position_off: 0.2
     button_10:
       function: "joint_position"
@@ -28,16 +29,31 @@
       joint_name: "collector_hand_right"
       position_on: 1.7
       position_off: 0.2
+    button_11:
+      function: "joint_speed"
+      mode: "hold"
+      joint_name: "belt_launcher"
+      speed_on: 150.0
+      speed_off: 0.0
+      priority: 2
     button_12:
+      function: "joint_speed"
+      mode: "hold"
+      joint_name: "belt_launcher"
+      speed_on: -150.0
+      speed_off: 0.0
+      priority: 2
+
+    button_13:
+      function: "get_origin"
+      mode: "positive_edge"
+      joint_names: ["collector_hand_left", "collector_hand_right", "collector_arm_left", "collector_arm_right", "helper"]
+    button_14:
       function: "joint_position"
       mode: "hold"
       joint_name: "helper"
       position_on  : 1.7
       position_off : 0.0
-    button_14:
-      function: "get_origin"
-      mode: "positive_edge"
-      joint_names: ["collector_hand_left", "collector_hand_right", "collector_arm_left", "collector_arm_right", "helper"]
     zl:
       function: "joint_position"
       mode: "hold"
