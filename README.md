@@ -1,6 +1,13 @@
 # krb2026b_ros2
 交流ロボコン2026BのROS 2
 
+# 環境構築
+OpenVINO
+
+https://www.isus.jp/wp-content/uploads/openvino/2024/docs/get-started/install-openvino.html?PACKAGE=OPENVINO_BASE&VERSION=v_2024_3_0&OP_SYSTEM=LINUX&DISTRIBUTION=APT
+
+
+
 # 起動手順
 opi ssh後 CANableを再接続
 
