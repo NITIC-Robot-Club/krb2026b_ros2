@@ -6,7 +6,15 @@ OpenVINO
 
 https://www.isus.jp/wp-content/uploads/openvino/2024/docs/get-started/install-openvino.html?PACKAGE=OPENVINO_BASE&VERSION=v_2024_3_0&OP_SYSTEM=LINUX&DISTRIBUTION=APT
 
+humbleの場合は src/detection/krb2026b_duck_detection/include/krb2026b_duck_detection/duck_detection.hpp の
 
+#include <cv_bridge/cv_bridge.hpp>
+
+を
+
+#include <cv_bridge/cv_bridge.h>
+
+に
 
 # 起動手順
 opi ssh後 CANableを再接続

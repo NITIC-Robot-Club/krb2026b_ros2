@@ -157,7 +157,8 @@ std::vector<bottle_detection::Point2D> bottle_detection::low_pass_filter_centers
 
     for (size_t i = 0; i < centers.size (); ++i) {
         double best_dist = std::numeric_limits<double>::max ();
-        int    best_idx  = -1;
+        size_t    best_idx  = 0;
+        bool found = false;
         for (size_t j = 0; j < previous_filtered_centers_.size (); ++j) {
             if (used_prev[j]) {
                 continue;
@@ -168,10 +169,11 @@ std::vector<bottle_detection::Point2D> bottle_detection::low_pass_filter_centers
             if (dist < best_dist) {
                 best_dist = dist;
                 best_idx  = static_cast<int> (j);
+                found = true;
             }
         }
 
-        if (best_idx >= 0 && best_dist < lpf_match_dist_thresh_) {
+        if (found && best_dist < lpf_match_dist_thresh_) {
             used_prev[best_idx] = true;
             filtered[i].first   = alpha * centers[i].first + (1.0 - alpha) * previous_filtered_centers_[best_idx].first;
             filtered[i].second  = alpha * centers[i].second + (1.0 - alpha) * previous_filtered_centers_[best_idx].second;
